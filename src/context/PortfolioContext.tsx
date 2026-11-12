@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase, SUPABASE_TABLE } from '../lib/supabase';
 
 // ================= TIPE DATA =================
 export interface GeneralSettings {
@@ -84,6 +85,11 @@ export interface ContactAccount {
 export interface ContactSettings {
   title: string;
   description: string;
+}
+
+export interface AdminCredentials {
+  username: string;
+  password: string;
 }
 
 // ================= DATA DEFAULT =================
@@ -211,6 +217,78 @@ const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
   description: 'Punya ide menarik atau proyek yang ingin didiskusikan? Kirim pesan langsung ke saya.'
 };
 
+const DEFAULT_ADMIN_CREDENTIALS: AdminCredentials = {
+  username: 'admin',
+  password: 'admin123'
+};
+
+interface PortfolioSnapshot {
+  isDark: boolean;
+  primaryColor: string;
+  secondaryColor: string;
+  general: GeneralSettings;
+  personal: PersonalInfo;
+  projects: ProjectItem[];
+  certificates: CertificateItem[];
+  awards: AwardItem[];
+  contacts: ContactAccount[];
+  contactSettings: ContactSettings;
+  adminCredentials: AdminCredentials;
+}
+
+const buildPortfolioSnapshot = (
+  isDark: boolean,
+  primaryColor: string,
+  secondaryColor: string,
+  general: GeneralSettings,
+  personal: PersonalInfo,
+  projects: ProjectItem[],
+  certificates: CertificateItem[],
+  awards: AwardItem[],
+  contacts: ContactAccount[],
+  contactSettings: ContactSettings,
+  adminCredentials: AdminCredentials,
+): PortfolioSnapshot => ({
+  isDark,
+  primaryColor,
+  secondaryColor,
+  general,
+  personal,
+  projects,
+  certificates,
+  awards,
+  contacts,
+  contactSettings,
+  adminCredentials,
+});
+
+const applyRemoteSnapshot = (
+  snapshot: Partial<PortfolioSnapshot>,
+  setIsDark: React.Dispatch<React.SetStateAction<boolean>>,
+  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>,
+  setSecondaryColor: React.Dispatch<React.SetStateAction<string>>,
+  setGeneral: React.Dispatch<React.SetStateAction<GeneralSettings>>,
+  setPersonal: React.Dispatch<React.SetStateAction<PersonalInfo>>,
+  setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>,
+  setCertificates: React.Dispatch<React.SetStateAction<CertificateItem[]>>,
+  setAwards: React.Dispatch<React.SetStateAction<AwardItem[]>>,
+  setContacts: React.Dispatch<React.SetStateAction<ContactAccount[]>>,
+  setContactSettings: React.Dispatch<React.SetStateAction<ContactSettings>>,
+  setAdminCredentials: React.Dispatch<React.SetStateAction<AdminCredentials>>,
+) => {
+  if (snapshot.isDark !== undefined) setIsDark(snapshot.isDark);
+  if (snapshot.primaryColor) setPrimaryColor(snapshot.primaryColor);
+  if (snapshot.secondaryColor) setSecondaryColor(snapshot.secondaryColor);
+  if (snapshot.general) setGeneral((prev) => ({ ...prev, ...snapshot.general }));
+  if (snapshot.personal) setPersonal((prev) => ({ ...prev, ...snapshot.personal }));
+  if (snapshot.projects) setProjects(snapshot.projects);
+  if (snapshot.certificates) setCertificates(snapshot.certificates);
+  if (snapshot.awards) setAwards(snapshot.awards);
+  if (snapshot.contacts) setContacts(snapshot.contacts);
+  if (snapshot.contactSettings) setContactSettings((prev) => ({ ...prev, ...snapshot.contactSettings }));
+  if (snapshot.adminCredentials) setAdminCredentials((prev) => ({ ...prev, ...snapshot.adminCredentials }));
+};
+
 // ================= CONTEXT INTERFACE =================
 export interface PortfolioContextType {
   isDark: boolean;
@@ -251,6 +329,9 @@ export interface PortfolioContextType {
 
   contactSettings: ContactSettings;
   updateContactSettings: (data: Partial<ContactSettings>) => void;
+
+  adminCredentials: AdminCredentials;
+  updateAdminCredentials: (data: Partial<AdminCredentials>) => void;
 
   resetAllData: () => void;
 }
@@ -382,6 +463,69 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  const [adminCredentials, setAdminCredentials] = useState<AdminCredentials>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_admin_credentials');
+      return saved ? { ...DEFAULT_ADMIN_CREDENTIALS, ...JSON.parse(saved) } : DEFAULT_ADMIN_CREDENTIALS;
+    } catch {
+      return DEFAULT_ADMIN_CREDENTIALS;
+    }
+  });
+
+  const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadRemoteData = async () => {
+      if (!supabase) {
+        setIsRemoteLoaded(true);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from(SUPABASE_TABLE)
+          .select('content')
+          .eq('id', 'portfolio')
+          .maybeSingle();
+
+        if (ignore) return;
+
+        if (error && error.code !== 'PGRST116') {
+          console.error('Supabase load error:', error);
+        }
+
+        if (data?.content) {
+          applyRemoteSnapshot(
+            data.content as Partial<PortfolioSnapshot>,
+            setIsDark,
+            setPrimaryColor,
+            setSecondaryColor,
+            setGeneral,
+            setPersonal,
+            setProjects,
+            setCertificates,
+            setAwards,
+            setContacts,
+            setContactSettings,
+            setAdminCredentials,
+          );
+        }
+      } catch (remoteError) {
+        console.error('Failed to load remote portfolio data:', remoteError);
+      } finally {
+        if (!ignore) setIsRemoteLoaded(true);
+      }
+    };
+
+    void loadRemoteData();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -394,6 +538,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('portfolio_awards', JSON.stringify(awards));
       localStorage.setItem('portfolio_contacts', JSON.stringify(contacts));
       localStorage.setItem('portfolio_contact_settings', JSON.stringify(contactSettings));
+      localStorage.setItem('portfolio_admin_credentials', JSON.stringify(adminCredentials));
     } catch {
       // safe ignore
     }
@@ -403,7 +548,38 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings]);
+  }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
+
+  useEffect(() => {
+    if (!supabase || !isRemoteLoaded) return;
+
+    const payload = {
+      id: 'portfolio',
+      content: buildPortfolioSnapshot(
+        isDark,
+        primaryColor,
+        secondaryColor,
+        general,
+        personal,
+        projects,
+        certificates,
+        awards,
+        contacts,
+        contactSettings,
+        adminCredentials,
+      ),
+      updated_at: new Date().toISOString(),
+    };
+
+    void supabase
+      .from(SUPABASE_TABLE)
+      .upsert(payload, { onConflict: 'id' })
+      .then(({ error }) => {
+        if (error) {
+          console.error('Supabase sync error:', error);
+        }
+      });
+  }, [isRemoteLoaded, isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
 
   // Toggle Theme: Menukar otomatis Primary & Secondary (Hitam <-> Putih)
   const toggleTheme = () => {
@@ -524,6 +700,10 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     setContactSettings((prev: ContactSettings) => ({ ...prev, ...data }));
   };
 
+  const updateAdminCredentials = (data: Partial<AdminCredentials>) => {
+    setAdminCredentials((prev: AdminCredentials) => ({ ...prev, ...data }));
+  };
+
   const resetAllData = () => {
     setGeneral(DEFAULT_GENERAL);
     setPersonal(DEFAULT_PERSONAL);
@@ -532,6 +712,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     setAwards(DEFAULT_AWARDS);
     setContacts(DEFAULT_CONTACTS);
     setContactSettings(DEFAULT_CONTACT_SETTINGS);
+    setAdminCredentials(DEFAULT_ADMIN_CREDENTIALS);
     resetTheme();
   };
 
@@ -568,6 +749,8 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       deleteContact,
       contactSettings,
       updateContactSettings,
+      adminCredentials,
+      updateAdminCredentials,
       resetAllData
     }}>
       {children}

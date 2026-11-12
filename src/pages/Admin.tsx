@@ -181,12 +181,15 @@ export default function Admin() {
     deleteContact,
     contactSettings,
     updateContactSettings,
+    adminCredentials,
+    updateAdminCredentials,
     resetAllData
   } = usePortfolio();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem('admin_auth') === 'true';
   });
+  const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'tentang' | 'projek' | 'sertifikat' | 'contact'>('general');
@@ -243,10 +246,14 @@ export default function Admin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === 'admin123') {
+    if (
+      usernameInput.trim() === adminCredentials.username.trim() &&
+      passwordInput === adminCredentials.password
+    ) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
       setPasswordError(false);
+      setUsernameInput('');
       setPasswordInput('');
     } else {
       setPasswordError(true);
@@ -294,16 +301,28 @@ export default function Admin() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
+                <label className="text-[10px] uppercase tracking-[0.2em] text-slate-400 block mb-1">Username</label>
+                <input 
+                  type="text" 
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value)}
+                  placeholder={`Username admin (${adminCredentials.username})`}
+                  className="w-full px-4 py-3 rounded-xl glass-panel bg-white/5 border border-white/10 text-sm focus:outline-none focus:border-cyan-400"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-[0.2em] text-slate-400 block mb-1">Password</label>
                 <input 
                   type="password" 
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Passcode Admin (Default: admin123)"
+                  placeholder={`Password admin (${adminCredentials.password})`}
                   className="w-full px-4 py-3 rounded-xl glass-panel bg-white/5 border border-white/10 text-sm focus:outline-none focus:border-cyan-400"
-                  autoFocus
                 />
                 {passwordError && (
-                  <p className="text-xs text-rose-400 mt-2">Passcode salah! Gunakan: admin123</p>
+                  <p className="text-xs text-rose-400 mt-2">Username atau password salah!</p>
                 )}
               </div>
 
@@ -320,6 +339,35 @@ export default function Admin() {
       ) : (
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 py-8">
           
+          <div className="glass-panel rounded-2xl p-5 mb-8">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 mb-2">Modifier Akun Admin</p>
+                <h3 className="text-lg font-bold">Username & Password</h3>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 w-full max-w-xl">
+                <div>
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-slate-400 block mb-1">Username</label>
+                  <input
+                    type="text"
+                    value={adminCredentials.username}
+                    onChange={(e) => updateAdminCredentials({ username: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-slate-400 block mb-1">Password</label>
+                  <input
+                    type="text"
+                    value={adminCredentials.password}
+                    onChange={(e) => updateAdminCredentials({ password: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Header Bar */}
           <div className="glass-panel rounded-2xl p-4 sm:p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
