@@ -1,7 +1,7 @@
 import { usePortfolio } from '../context/PortfolioContext';
 
 export default function Hero() {
-  const { primaryColor, secondaryColor, general, personal } = usePortfolio();
+  const { isDark, primaryColor, secondaryColor, general, personal } = usePortfolio();
 
   return (
     <section id="beranda" className="relative z-10 pt-28 pb-16 px-4 sm:px-8 flex items-center justify-center min-h-screen">
@@ -16,7 +16,7 @@ export default function Hero() {
             >
               {general.badgeText}
             </div>
-            <div className="hidden sm:block text-xs font-serif italic text-slate-400">
+            <div className={`hidden sm:block text-xs font-serif italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
               "Presisi kode & estetika visual tak tertandingi."
             </div>
           </div>
@@ -66,14 +66,16 @@ export default function Hero() {
         {/* Bottom Hero Info */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-white/10 mt-6">
           <div className="text-center sm:text-left">
-            <h2 className="text-sm font-bold uppercase tracking-wider">{personal.name}</h2>
-            <p className="text-xs text-slate-400 mt-0.5">{personal.role}</p>
+            <h2 className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>{personal.name}</h2>
+            <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{personal.role}</p>
           </div>
 
           <div className="flex items-center gap-3">
             <a 
               href="#projek" 
-              className="px-5 py-2.5 rounded-xl font-medium text-xs uppercase tracking-wider text-white shadow-lg hover:scale-105 active:scale-95 transition"
+              className={`px-5 py-2.5 rounded-xl font-medium text-xs uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition ${
+  isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+}`}
               style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
             >
               Jelajahi Projek

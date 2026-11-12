@@ -258,6 +258,7 @@ export interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
+  // Mode Gelap sebagai default
   const [isDark, setIsDark] = useState<boolean>(() => {
     try {
       return localStorage.getItem('theme') !== 'light';
@@ -266,19 +267,23 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  // Mode Gelap = Primary Hitam (#000000) | Mode Terang = Primary Putih (#ffffff)
   const [primaryColor, setPrimaryColor] = useState<string>(() => {
     try {
-      return localStorage.getItem('primaryColor') || '#06b6d4';
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme === 'light' ? '#ffffff' : '#000000';
     } catch {
-      return '#06b6d4';
+      return '#000000';
     }
   });
 
+  // Mode Gelap = Secondary Putih (#ffffff) | Mode Terang = Secondary Hitam (#000000)
   const [secondaryColor, setSecondaryColor] = useState<string>(() => {
     try {
-      return localStorage.getItem('secondaryColor') || '#8b5cf6';
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme === 'light' ? '#000000' : '#ffffff';
     } catch {
-      return '#8b5cf6';
+      return '#ffffff';
     }
   });
 
@@ -400,10 +405,31 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings]);
 
-  const toggleTheme = () => setIsDark((prev: boolean) => !prev);
+  // Toggle Theme: Menukar otomatis Primary & Secondary (Hitam <-> Putih)
+  const toggleTheme = () => {
+    setIsDark((prev: boolean) => {
+      const nextIsDark = !prev;
+      if (nextIsDark) {
+        // Mode Gelap: Primary Hitam, Secondary Putih
+        setPrimaryColor('#000000');
+        setSecondaryColor('#ffffff');
+      } else {
+        // Mode Terang: Primary Putih, Secondary Hitam
+        setPrimaryColor('#ffffff');
+        setSecondaryColor('#000000');
+      }
+      return nextIsDark;
+    });
+  };
+
   const resetTheme = () => {
-    setPrimaryColor('#06b6d4');
-    setSecondaryColor('#8b5cf6');
+    if (isDark) {
+      setPrimaryColor('#000000');
+      setSecondaryColor('#ffffff');
+    } else {
+      setPrimaryColor('#ffffff');
+      setSecondaryColor('#000000');
+    }
   };
 
   const updateGeneral = (data: Partial<GeneralSettings>) => {

@@ -2,7 +2,25 @@ import { FileText, Code2, GraduationCap, Briefcase } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
 export default function About() {
-  const { primaryColor, personal } = usePortfolio();
+  const { isDark, primaryColor, personal } = usePortfolio();
+
+  const themeTitle = isDark ? 'text-white' : 'text-zinc-900';
+  const themeBody = isDark ? 'text-slate-300' : 'text-slate-700';
+  const themeMuted = isDark ? 'text-zinc-400' : 'text-zinc-500';
+
+  const getContrastTextColor = (hexColor: string) => {
+    const cleaned = hexColor.replace('#', '');
+    const normalized = cleaned.length === 3
+      ? cleaned.split('').map((char) => char + char).join('')
+      : cleaned;
+
+    const r = Number.parseInt(normalized.slice(0, 2), 16);
+    const g = Number.parseInt(normalized.slice(2, 4), 16);
+    const b = Number.parseInt(normalized.slice(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.6 ? '#000000' : '#ffffff';
+  };
 
   return (
     <section id="tentang" className="relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
@@ -29,7 +47,7 @@ export default function About() {
           >
             {personal.greeting || "Hi, I'm"}
           </h3>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white leading-tight mb-8">
+          <h1 className={`text-4xl sm:text-5xl font-black tracking-tight leading-tight mb-8 ${themeTitle}`}>
             {personal.name}
           </h1>
 
@@ -38,8 +56,8 @@ export default function About() {
               href={personal.cvUrl || '#'} 
               target="_blank" 
               rel="noreferrer"
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs font-semibold tracking-wider text-white shadow-xl hover:scale-105 active:scale-95 transition"
-              style={{ backgroundColor: primaryColor }}
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs font-semibold tracking-wider shadow-xl hover:scale-105 active:scale-95 transition"
+              style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
             >
               <FileText size={16} />
               View CV
@@ -65,15 +83,15 @@ export default function About() {
 
         {/* Kolom Kanan: Paragraf Bio & Tombol View Projects */}
         <div className="lg:col-span-4 text-center lg:text-left order-3">
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 font-light">
+          <p className={`text-sm sm:text-base leading-relaxed mb-8 font-light ${themeBody}`}>
             {personal.bio}
           </p>
 
           <div>
             <a 
               href="#projek" 
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-xs font-semibold tracking-wider text-white shadow-xl hover:scale-105 active:scale-95 transition"
-              style={{ backgroundColor: primaryColor }}
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs font-semibold tracking-wider shadow-xl hover:scale-105 active:scale-95 transition"
+              style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
             >
               <Code2 size={16} />
               View Projects
@@ -88,7 +106,7 @@ export default function About() {
         
         {/* Kolom Education */}
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold mb-8 flex items-center gap-2.5 text-white">
+          <h2 className={`text-xl sm:text-2xl font-bold mb-8 flex items-center gap-2.5 ${themeTitle}`}>
             <GraduationCap size={24} style={{ color: primaryColor }} />
             Education
           </h2>
@@ -106,18 +124,18 @@ export default function About() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
-                  <h4 className="text-sm sm:text-base font-bold text-white tracking-wide">
+                  <h4 className={`text-sm sm:text-base font-bold tracking-wide ${themeTitle}`}>
                     {edu.institution}
                   </h4>
-                  <span className="text-[11px] font-mono text-zinc-400 px-2.5 py-0.5 rounded-full bg-zinc-900/80 border border-zinc-800 self-start sm:self-auto">
+                  <span className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full self-start sm:self-auto ${isDark ? 'text-zinc-400 bg-zinc-900/80 border border-zinc-800' : 'text-zinc-500 bg-zinc-100 border border-zinc-200'}`}>
                     {edu.period}
                   </span>
                 </div>
 
-                <div className="text-xs sm:text-sm font-medium text-slate-200 mb-0.5">
+                <div className={`text-xs sm:text-sm font-medium mb-0.5 ${themeBody}`}>
                   {edu.major}
                 </div>
-                <div className="text-[11px] text-zinc-400">
+                <div className={`text-[11px] ${themeMuted}`}>
                   {edu.subDetail}
                 </div>
               </div>
@@ -127,7 +145,7 @@ export default function About() {
 
         {/* Kolom Experience */}
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold mb-8 flex items-center gap-2.5 text-white">
+          <h2 className={`text-xl sm:text-2xl font-bold mb-8 flex items-center gap-2.5 ${themeTitle}`}>
             <Briefcase size={22} style={{ color: primaryColor }} />
             Experience
           </h2>
@@ -145,18 +163,18 @@ export default function About() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
-                  <h4 className="text-sm sm:text-base font-bold text-white tracking-wide">
+                  <h4 className={`text-sm sm:text-base font-bold tracking-wide ${themeTitle}`}>
                     {exp.company}
                   </h4>
-                  <span className="text-[11px] font-mono text-zinc-400 px-2.5 py-0.5 rounded-full bg-zinc-900/80 border border-zinc-800 self-start sm:self-auto">
+                  <span className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full self-start sm:self-auto ${isDark ? 'text-zinc-400 bg-zinc-900/80 border border-zinc-800' : 'text-zinc-500 bg-zinc-100 border border-zinc-200'}`}>
                     {exp.period}
                   </span>
                 </div>
 
-                <div className="text-xs sm:text-sm font-medium text-slate-200 mb-0.5">
+                <div className={`text-xs sm:text-sm font-medium mb-0.5 ${themeBody}`}>
                   {exp.role}
                 </div>
-                <div className="text-[11px] text-zinc-400">
+                <div className={`text-[11px] ${themeMuted}`}>
                   {exp.subDetail}
                 </div>
               </div>
