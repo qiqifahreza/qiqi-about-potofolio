@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animasi Cairan Mengambang (Liquid Blobs) */
+@keyframes float-blob {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.15) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 40px) scale(0.9) rotate(240deg);
+  }
+}
+
+.animate-liquid-1 {
+  animation: float-blob 16s ease-in-out infinite;
+}
+
+.animate-liquid-2 {
+  animation: float-blob 22s ease-in-out infinite reverse;
+}
+
+.animate-liquid-3 {
+  animation: float-blob 18s ease-in-out 4s infinite;
+}
+
+/* Glass Card Utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
