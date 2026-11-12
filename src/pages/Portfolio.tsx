@@ -75,7 +75,7 @@ export default function Portfolio() {
     }`;
 
   return (
-    <section id="projek" className="relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
+    <section id="projek" className="page-fade-up relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.06] overflow-hidden">
         <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
           <path d="M 50,150 C 250,50 450,50 650,150 C 850,250 950,250 1000,150" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -85,12 +85,12 @@ export default function Portfolio() {
       </div>
 
       <div className="flex justify-center mb-16 relative z-20">
-        <div className="inline-flex items-center p-1.5 rounded-3xl liquid-glass bg-white/70 dark:bg-zinc-900/80 border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-2xl">
+        <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-3xl liquid-glass bg-white/70 dark:bg-zinc-900/80 border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-2xl max-w-full">
           <button
             type="button"
             aria-pressed={activeTab === 'projects'}
             onClick={() => setActiveTab('projects')}
-            className={getTabButtonClass('projects')}
+            className={`${getTabButtonClass('projects')} flex-1 sm:flex-none`}
             style={{
               backgroundColor: activeTab === 'projects' ? primaryColor : 'transparent',
               color: activeTab === 'projects' ? getContrastTextColor(primaryColor) : undefined,
@@ -105,7 +105,7 @@ export default function Portfolio() {
             type="button"
             aria-pressed={activeTab === 'certificates'}
             onClick={() => setActiveTab('certificates')}
-            className={getTabButtonClass('certificates')}
+            className={`${getTabButtonClass('certificates')} flex-1 sm:flex-none`}
             style={{
               backgroundColor: activeTab === 'certificates' ? primaryColor : 'transparent',
               color: activeTab === 'certificates' ? getContrastTextColor(primaryColor) : undefined,
@@ -120,7 +120,7 @@ export default function Portfolio() {
             type="button"
             aria-pressed={activeTab === 'awards'}
             onClick={() => setActiveTab('awards')}
-            className={getTabButtonClass('awards')}
+            className={`${getTabButtonClass('awards')} flex-1 sm:flex-none`}
             style={{
               backgroundColor: activeTab === 'awards' ? primaryColor : 'transparent',
               color: activeTab === 'awards' ? getContrastTextColor(primaryColor) : undefined,
@@ -134,27 +134,31 @@ export default function Portfolio() {
       </div>
 
       <div className="relative group/carousel">
+        {/* Tombol Panah Kiri (<) Monokrom Kontras */}
         <button
           onClick={scrollLeft}
           aria-label="Geser ke Kiri"
-          className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200"
-          style={{ backgroundColor: primaryColor }}
+          className={`absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 ${
+            isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+          }`}
         >
           <ChevronLeft size={22} />
         </button>
 
+        {/* Tombol Panah Kanan (>) Monokrom Kontras */}
         <button
           onClick={scrollRight}
           aria-label="Geser ke Kanan"
-          className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200"
-          style={{ backgroundColor: primaryColor }}
+          className={`absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 ${
+            isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+          }`}
         >
           <ChevronRight size={22} />
         </button>
 
         <div
           ref={sliderRef}
-          className="flex items-stretch gap-6 overflow-x-auto scroll-smooth no-scrollbar py-6 px-2"
+          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar py-6 px-1 sm:px-2"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {activeTab === 'projects' &&
@@ -184,10 +188,12 @@ export default function Portfolio() {
                     </p>
                   </div>
 
+                  {/* Tombol Details Monokrom */}
                   <button
                     onClick={() => setSelectedProject(proj)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-white tracking-wide shadow-md hover:scale-105 active:scale-95 transition"
-                    style={{ backgroundColor: primaryColor }}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide shadow-md hover:scale-105 active:scale-95 transition ${
+                      isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                    }`}
                   >
                     Details
                     <ArrowRight size={14} />
@@ -200,7 +206,7 @@ export default function Portfolio() {
             (certificates || []).map((cert: CertificateItem, idx: number) => (
               <div
                 key={cert.id || idx}
-                className={`min-w-[320px] sm:min-w-[380px] max-w-[380px] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between hover:-translate-y-2 transition-all duration-300 ${isDark ? 'bg-zinc-900/90 border border-white/10' : 'bg-white border border-zinc-200/80'}`}
+                className={`min-w-[260px] sm:min-w-[380px] max-w-[380px] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between hover:-translate-y-2 transition-all duration-300 ${isDark ? 'bg-zinc-900/90 border border-white/10' : 'bg-white border border-zinc-200/80'}`}
               >
                 <div
                   className="h-52 sm:h-56 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 relative cursor-pointer group"
@@ -234,7 +240,7 @@ export default function Portfolio() {
               (awards || []).map((award: AwardItem, idx: number) => (
                 <div
                   key={award.id || idx}
-                  className={`min-w-[300px] sm:min-w-[340px] max-w-[340px] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between hover:-translate-y-2 transition-all duration-300 ${isDark ? 'bg-zinc-900/90 border border-white/10' : 'bg-white border border-zinc-200/80'}`}
+                  className={`min-w-[260px] sm:min-w-[340px] max-w-[340px] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between hover:-translate-y-2 transition-all duration-300 ${isDark ? 'bg-zinc-900/90 border border-white/10' : 'bg-white border border-zinc-200/80'}`}
                 >
                   <div className="h-44 sm:h-48 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 relative">
                     <img
@@ -275,8 +281,9 @@ export default function Portfolio() {
             </button>
 
             <span
-              className="text-[10px] font-mono font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-md"
-              style={{ backgroundColor: primaryColor }}
+              className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${
+                isDark ? 'bg-white text-black' : 'bg-black text-white'
+              }`}
             >
               {selectedProject.category}
             </span>
@@ -320,8 +327,9 @@ export default function Portfolio() {
                   href={selectedProject.demo}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-3 rounded-xl font-semibold text-xs text-white text-center flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition"
-                  style={{ backgroundColor: primaryColor }}
+                  className={`flex-1 py-3 rounded-xl font-semibold text-xs text-center flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition ${
+                    isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                  }`}
                 >
                   <ExternalLink size={16} />
                   Kunjungi Website

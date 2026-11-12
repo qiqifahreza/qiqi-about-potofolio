@@ -14,6 +14,11 @@ export interface GeneralSettings {
   heroImageUrl: string;
   currentStatusTitle: string;
   currentStatusText: string;
+  newsLabel: string;
+  heroIntro: string;
+  heroDescription: string;
+  heroQuote: string;
+  heroQuoteAuthor: string;
 }
 
 export interface EducationItem {
@@ -104,7 +109,12 @@ const DEFAULT_GENERAL: GeneralSettings = {
   heroSignature: 'Al Farizi',
   heroImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=900',
   currentStatusTitle: 'Current Status !!',
-  currentStatusText: 'Mochamad Rifki Al Farizi adalah Software Engineer yang berfokus membangun antarmuka web modern berperforma tinggi.'
+  currentStatusText: 'Mochamad Rifki Al Farizi adalah Software Engineer yang berfokus membangun antarmuka web modern berperforma tinggi.',
+  newsLabel: 'N E W S',
+  heroIntro: 'Seperti pizza yang dinanti-nantikan semua orang, selalu nantikan aku ya!\nHalo aku Marsha!',
+  heroDescription: 'Marsha adalah member JKT48 yang dijuluki sebagai anime hidup karena parasnya yang sangat rupawan.',
+  heroQuote: 'It\'s not impossible, it\'s just hard',
+  heroQuoteAuthor: '~Qiqifahreza~'
 };
 
 const DEFAULT_PERSONAL: PersonalInfo = {

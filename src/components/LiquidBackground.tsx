@@ -11,7 +11,14 @@ export default function LiquidBackground() {
           isDark ? 'bg-white/[0.08]' : 'bg-black/[0.04]'
         }`}
       />
-      {/* Blob 2 */}
+      {/* Blob 2 */}{/* FOTO MODEL CUTOUT TENGAH (Diturunkan Mendekati Border Bawah) */}
+<div className="relative z-20 h-[48vh] sm:h-[62vh] flex items-end justify-center pointer-events-none translate-y-8 sm:translate-y-12 lg:translate-y-16">
+  <img 
+    src={general.heroImageUrl} 
+    alt={personal.name} 
+    className="h-full w-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] filter contrast-105"
+  />
+</div>
       <div 
         className={`absolute top-1/2 -right-32 w-96 sm:w-[550px] h-96 sm:h-[550px] rounded-full blur-[130px] animate-liquid-2 transition-all duration-700 ${
           isDark ? 'bg-white/[0.05]' : 'bg-black/[0.05]'

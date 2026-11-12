@@ -2,14 +2,14 @@ import { Send, ExternalLink } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
 export default function Contacts() {
-  const { isDark, primaryColor, secondaryColor, contacts, contactSettings } = usePortfolio();
+  const { isDark, contacts, contactSettings } = usePortfolio();
 
   const themeTitle = isDark ? 'text-white' : 'text-zinc-900';
   const themeMuted = isDark ? 'text-slate-400' : 'text-slate-600';
   const themeBody = isDark ? 'text-slate-300' : 'text-slate-700';
 
   return (
-    <section id="contact" className="relative z-10 py-24 px-4 sm:px-8 max-w-4xl mx-auto">
+    <section id="contact" className="page-fade-up relative z-10 py-24 px-4 sm:px-8 max-w-4xl mx-auto">
       <div className="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
         <div className="text-center mb-10">
           <h2 className={`text-3xl sm:text-4xl font-extrabold ${themeTitle}`}>{contactSettings.title}</h2>
@@ -50,10 +50,12 @@ export default function Contacts() {
             />
           </div>
 
+          {/* Tombol Kirim Pesan Monokrom Tegas */}
           <button 
             type="submit" 
-            className="w-full py-3.5 rounded-xl font-semibold text-xs uppercase tracking-wider text-white shadow-xl hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2"
-            style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
+            className={`w-full py-3.5 rounded-xl font-semibold text-xs uppercase tracking-wider shadow-xl hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2 ${
+              isDark ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+            }`}
           >
             <Send size={16} /> Kirim Pesan
           </button>

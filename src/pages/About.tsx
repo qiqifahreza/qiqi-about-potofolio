@@ -23,7 +23,7 @@ export default function About() {
   };
 
   return (
-    <section id="tentang" className="relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
+    <section id="tentang" className="page-fade-up relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
       
       {/* Background Topographic Contour Lines */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.06] overflow-hidden">
