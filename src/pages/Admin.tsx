@@ -183,6 +183,8 @@ export default function Admin() {
     updateContactSettings,
     adminCredentials,
     updateAdminCredentials,
+    isSaving,
+    savePortfolio,
     resetAllData
   } = usePortfolio();
 
@@ -380,7 +382,19 @@ export default function Admin() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end flex-wrap">
+              <button
+                type="button"
+                onClick={() => void savePortfolio()}
+                disabled={isSaving}
+                className="px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition disabled:opacity-60"
+                style={{
+                  background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+                  color: isDark ? '#ffffff' : '#0f172a',
+                }}
+              >
+                {isSaving ? 'Menyimpan...' : 'Simpan Pengaturan'}
+              </button>
               <Link 
                 to="/" 
                 className="px-4 py-2 rounded-xl glass-panel text-xs font-mono uppercase tracking-wider hover:text-white flex items-center gap-1.5 transition"

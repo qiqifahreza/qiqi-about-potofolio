@@ -333,6 +333,8 @@ export interface PortfolioContextType {
   adminCredentials: AdminCredentials;
   updateAdminCredentials: (data: Partial<AdminCredentials>) => void;
 
+  isSaving: boolean;
+  savePortfolio: () => Promise<void>;
   resetAllData: () => void;
 }
 
@@ -473,6 +475,43 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   });
 
   const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const savePortfolio = async () => {
+    if (!supabase || !isRemoteLoaded) return;
+
+    setIsSaving(true);
+
+    const payload = {
+      id: 'portfolio',
+      content: buildPortfolioSnapshot(
+        isDark,
+        primaryColor,
+        secondaryColor,
+        general,
+        personal,
+        projects,
+        certificates,
+        awards,
+        contacts,
+        contactSettings,
+        adminCredentials,
+      ),
+      updated_at: new Date().toISOString(),
+    };
+
+    try {
+      const { error } = await supabase
+        .from(SUPABASE_TABLE)
+        .upsert(payload, { onConflict: 'id' });
+
+      if (error) {
+        console.error('Supabase sync error:', error);
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -549,37 +588,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove('dark');
     }
   }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
-
-  useEffect(() => {
-    if (!supabase || !isRemoteLoaded) return;
-
-    const payload = {
-      id: 'portfolio',
-      content: buildPortfolioSnapshot(
-        isDark,
-        primaryColor,
-        secondaryColor,
-        general,
-        personal,
-        projects,
-        certificates,
-        awards,
-        contacts,
-        contactSettings,
-        adminCredentials,
-      ),
-      updated_at: new Date().toISOString(),
-    };
-
-    void supabase
-      .from(SUPABASE_TABLE)
-      .upsert(payload, { onConflict: 'id' })
-      .then(({ error }) => {
-        if (error) {
-          console.error('Supabase sync error:', error);
-        }
-      });
-  }, [isRemoteLoaded, isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
 
   // Toggle Theme: Menukar otomatis Primary & Secondary (Hitam <-> Putih)
   const toggleTheme = () => {
@@ -751,6 +759,8 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       updateContactSettings,
       adminCredentials,
       updateAdminCredentials,
+      isSaving,
+      savePortfolio,
       resetAllData
     }}>
       {children}
