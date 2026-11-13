@@ -3,11 +3,10 @@ import { usePortfolio } from '../context/PortfolioContext';
 export default function Hero() {
   const { general, personal, isDark } = usePortfolio();
 
-  // Pisahkan huruf nama besar agar merentang rata di layar (misal: R I F K I)
   const bigLetters = (general.heroBigText || 'RIFKI').split('');
 
   return (
-    <section id="beranda" className="page-fade-up min-h-screen pt-24 pb-12 px-3 sm:px-6 flex items-center justify-center select-none">
+    <section id="beranda" className="scroll-fade-in min-h-screen pt-24 pb-12 px-3 sm:px-6 flex items-center justify-center select-none">
       
       {/* BINGKAI KOTAK EDITORIAL MAJALAH (BORDER FRAME) */}
       <div 
@@ -34,10 +33,10 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Jikosoukai Heading & Intro */}
+            {/* Jikosoukai Heading & Intro Dinamis */}
             <div className="leading-snug">
               <h2 className="text-xs font-black tracking-[0.2em] uppercase font-mono">
-                JIKOSOUKAI
+                {general.jikosoukaiTitle || 'JIKOSOUKAI'}
               </h2>
               <p className="text-[11px] sm:text-xs mt-1 italic font-serif opacity-80 whitespace-pre-line leading-relaxed">
                 {general.heroIntro || "Seperti pizza yang dinanti-nantikan semua orang, selalu nantikan aku ya!\nHalo, saya Mochamad Rifki Al Farizi!"}
@@ -45,7 +44,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Top-Right: Barcode Garis Gantung & Info Meta */}
+          {/* Top-Right: Barcode Garis Gantung & Teks Info Dinamis */}
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-[3px] h-10 mb-3 opacity-80">
               {[38, 22, 35, 14, 28, 42, 18, 32, 12, 26, 40, 16, 30].map((h, i) => (
@@ -57,8 +56,9 @@ export default function Hero() {
               ))}
             </div>
 
+            {/* Teks Tanggal / Info Dinamis (cth: Rifki.09-01-2006) */}
             <p className="text-xs italic font-serif tracking-wider opacity-80">
-              {personal.nickname || 'Rifki'}.09-01-2006
+              {general.heroMetaText || `${personal.nickname || 'Rifki'}.09-01-2006`}
             </p>
             <p className="text-[11px] font-mono tracking-tight opacity-60 uppercase mt-0.5">
               Project By {personal.name || 'Mochamad Rifki Al Farizi'}
@@ -66,18 +66,18 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ================= CENTER HERO (HURUF BESAR & FOTO CUTOUT) ================= */}
+        {/* ================= CENTER HERO ================= */}
         <div className="relative flex-1 flex items-center justify-center my-auto">
           
           {/* Katakana Jepang di Kiri Atas Nama */}
           <div 
-  style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
-  className="absolute top-[2%] sm:top-[6%] left-2 sm:left-10 z-10 text-2xl sm:text-4xl font-light tracking-[0.35em] opacity-80"
->
-  {general.heroKatakana || 'モハマド・リフキ'}
-</div>
+            style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
+            className="absolute top-[2%] sm:top-[6%] left-2 sm:left-10 z-10 text-2xl sm:text-4xl font-light tracking-[0.35em] opacity-80"
+          >
+            {general.heroKatakana || 'モハマド・リフキ'}
+          </div>
 
-          {/* TEKS SERIF BESAR RENTANG LEBAR (DI BELAKANG FOTO) */}
+          {/* TEKS SERIF BESAR (DI BELAKANG FOTO) */}
           <div className="absolute inset-0 flex items-center justify-between w-full pointer-events-none z-10">
             <h1 
               style={{ fontFamily: "'Playfair Display', serif" }} 
@@ -89,17 +89,16 @@ export default function Hero() {
             </h1>
           </div>
 
-          {/* FOTO MODEL CUTOUT TENGAH */}
-          {/* FOTO MODEL CUTOUT TENGAH (Diturunkan Mendekati Border Bawah) */}
-<div className="relative z-20 h-[48vh] sm:h-[62vh] flex items-end justify-center pointer-events-none translate-y-8 sm:translate-y-12 lg:translate-y-16">
-  <img 
-    src={general.heroImageUrl} 
-    alt={personal.name} 
-    className="h-full w-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] filter contrast-105"
-  />
-</div>
+          {/* FOTO MODEL CUTOUT TENGAH (Posisi Diturunkan Mendekati Border) */}
+          <div className="relative z-20 h-[48vh] sm:h-[62vh] flex items-end justify-center pointer-events-none translate-y-8 sm:translate-y-12 lg:translate-y-16">
+            <img 
+              src={general.heroImageUrl} 
+              alt={personal.name} 
+              className="h-full w-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] filter contrast-105"
+            />
+          </div>
 
-          {/* Tanda Tangan Sambung / Cursive di Kanan Bawah Huruf */}
+          {/* Tanda Tangan Sambung / Cursive */}
           <div 
             style={{ fontFamily: "'Alex Brush', cursive" }}
             className={`absolute bottom-[2%] sm:bottom-[6%] right-[8%] sm:right-[16%] z-30 text-5xl sm:text-8xl rotate-[-5deg] drop-shadow-md select-none ${

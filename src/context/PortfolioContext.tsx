@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase, SUPABASE_TABLE } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 
 // ================= TIPE DATA =================
 export interface GeneralSettings {
-  webTitle: string;        // Judul tab browser
-  faviconUrl: string;      // Logo icon tab browser (Favicon)
-  logoText: string;        // Teks logo di navbar (contoh: Rifki)
-  navbarLogoUrl?: string;  // Gambar/Icon logo di navbar (opsional)
+  webTitle: string;
+  faviconUrl: string;
+  logoText: string;
+  navbarLogoUrl?: string;
   badgeText: string;
   heroKatakana: string;
   heroBigText: string;
@@ -19,6 +19,8 @@ export interface GeneralSettings {
   heroDescription: string;
   heroQuote: string;
   heroQuoteAuthor: string;
+  jikosoukaiTitle?: string;
+  heroMetaText?: string;
 }
 
 export interface EducationItem {
@@ -114,7 +116,9 @@ const DEFAULT_GENERAL: GeneralSettings = {
   heroIntro: 'Seperti pizza yang dinanti-nantikan semua orang, selalu nantikan aku ya!\nHalo aku Marsha!',
   heroDescription: 'Marsha adalah member JKT48 yang dijuluki sebagai anime hidup karena parasnya yang sangat rupawan.',
   heroQuote: 'It\'s not impossible, it\'s just hard',
-  heroQuoteAuthor: '~Qiqifahreza~'
+  heroQuoteAuthor: '~Qiqifahreza~',
+  jikosoukaiTitle: 'JIKOSOUKAI',
+  heroMetaText: 'Rifki.09-01-2006'
 };
 
 const DEFAULT_PERSONAL: PersonalInfo = {
@@ -232,73 +236,6 @@ const DEFAULT_ADMIN_CREDENTIALS: AdminCredentials = {
   password: 'admin123'
 };
 
-interface PortfolioSnapshot {
-  isDark: boolean;
-  primaryColor: string;
-  secondaryColor: string;
-  general: GeneralSettings;
-  personal: PersonalInfo;
-  projects: ProjectItem[];
-  certificates: CertificateItem[];
-  awards: AwardItem[];
-  contacts: ContactAccount[];
-  contactSettings: ContactSettings;
-  adminCredentials: AdminCredentials;
-}
-
-const buildPortfolioSnapshot = (
-  isDark: boolean,
-  primaryColor: string,
-  secondaryColor: string,
-  general: GeneralSettings,
-  personal: PersonalInfo,
-  projects: ProjectItem[],
-  certificates: CertificateItem[],
-  awards: AwardItem[],
-  contacts: ContactAccount[],
-  contactSettings: ContactSettings,
-  adminCredentials: AdminCredentials,
-): PortfolioSnapshot => ({
-  isDark,
-  primaryColor,
-  secondaryColor,
-  general,
-  personal,
-  projects,
-  certificates,
-  awards,
-  contacts,
-  contactSettings,
-  adminCredentials,
-});
-
-const applyRemoteSnapshot = (
-  snapshot: Partial<PortfolioSnapshot>,
-  setIsDark: React.Dispatch<React.SetStateAction<boolean>>,
-  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>,
-  setSecondaryColor: React.Dispatch<React.SetStateAction<string>>,
-  setGeneral: React.Dispatch<React.SetStateAction<GeneralSettings>>,
-  setPersonal: React.Dispatch<React.SetStateAction<PersonalInfo>>,
-  setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>,
-  setCertificates: React.Dispatch<React.SetStateAction<CertificateItem[]>>,
-  setAwards: React.Dispatch<React.SetStateAction<AwardItem[]>>,
-  setContacts: React.Dispatch<React.SetStateAction<ContactAccount[]>>,
-  setContactSettings: React.Dispatch<React.SetStateAction<ContactSettings>>,
-  setAdminCredentials: React.Dispatch<React.SetStateAction<AdminCredentials>>,
-) => {
-  if (snapshot.isDark !== undefined) setIsDark(snapshot.isDark);
-  if (snapshot.primaryColor) setPrimaryColor(snapshot.primaryColor);
-  if (snapshot.secondaryColor) setSecondaryColor(snapshot.secondaryColor);
-  if (snapshot.general) setGeneral((prev) => ({ ...prev, ...snapshot.general }));
-  if (snapshot.personal) setPersonal((prev) => ({ ...prev, ...snapshot.personal }));
-  if (snapshot.projects) setProjects(snapshot.projects);
-  if (snapshot.certificates) setCertificates(snapshot.certificates);
-  if (snapshot.awards) setAwards(snapshot.awards);
-  if (snapshot.contacts) setContacts(snapshot.contacts);
-  if (snapshot.contactSettings) setContactSettings((prev) => ({ ...prev, ...snapshot.contactSettings }));
-  if (snapshot.adminCredentials) setAdminCredentials((prev) => ({ ...prev, ...snapshot.adminCredentials }));
-};
-
 // ================= CONTEXT INTERFACE =================
 export interface PortfolioContextType {
   isDark: boolean;
@@ -351,7 +288,6 @@ export interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
-  // Mode Gelap sebagai default
   const [isDark, setIsDark] = useState<boolean>(() => {
     try {
       return localStorage.getItem('theme') !== 'light';
@@ -360,7 +296,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Mode Gelap = Primary Hitam (#000000) | Mode Terang = Primary Putih (#ffffff)
   const [primaryColor, setPrimaryColor] = useState<string>(() => {
     try {
       const savedTheme = localStorage.getItem('theme');
@@ -370,7 +305,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Mode Gelap = Secondary Putih (#ffffff) | Mode Terang = Secondary Hitam (#000000)
   const [secondaryColor, setSecondaryColor] = useState<string>(() => {
     try {
       const savedTheme = localStorage.getItem('theme');
@@ -389,7 +323,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Sinkronisasi Judul Tab Browser & Favicon secara dinamis
   useEffect(() => {
     if (general.webTitle) {
       document.title = general.webTitle;
@@ -487,94 +420,375 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const savePortfolio = async () => {
-    if (!supabase || !isRemoteLoaded) return;
-
-    setIsSaving(true);
-
-    const payload = {
-      id: 'portfolio',
-      content: buildPortfolioSnapshot(
-        isDark,
-        primaryColor,
-        secondaryColor,
-        general,
-        personal,
-        projects,
-        certificates,
-        awards,
-        contacts,
-        contactSettings,
-        adminCredentials,
-      ),
-      updated_at: new Date().toISOString(),
-    };
-
-    try {
-      const { error } = await supabase
-        .from(SUPABASE_TABLE)
-        .upsert(payload, { onConflict: 'id' });
-
-      if (error) {
-        console.error('Supabase sync error:', error);
-      }
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
+  // ================= LOAD DATA DARI TABEL-TABEL SUPABASE =================
   useEffect(() => {
     let ignore = false;
 
-    const loadRemoteData = async () => {
+    const loadFromSupabaseTables = async () => {
       if (!supabase) {
         setIsRemoteLoaded(true);
         return;
       }
 
       try {
-        const { data, error } = await supabase
-          .from(SUPABASE_TABLE)
-          .select('content')
-          .eq('id', 'portfolio')
-          .maybeSingle();
+        const [
+          genRes,
+          perRes,
+          eduRes,
+          expRes,
+          projRes,
+          certRes,
+          awardRes,
+          contRes,
+          cSetRes,
+          admRes,
+        ] = await Promise.all([
+          supabase.from('general_settings').select('*').eq('id', 'default').maybeSingle(),
+          supabase.from('personal_info').select('*').eq('id', 'default').maybeSingle(),
+          supabase.from('education').select('*').order('created_at', { ascending: true }),
+          supabase.from('experience').select('*').order('created_at', { ascending: true }),
+          supabase.from('projects').select('*').order('created_at', { ascending: false }),
+          supabase.from('certificates').select('*').order('created_at', { ascending: false }),
+          supabase.from('awards').select('*').order('created_at', { ascending: false }),
+          supabase.from('contacts').select('*').order('created_at', { ascending: true }),
+          supabase.from('contact_settings').select('*').eq('id', 'default').maybeSingle(),
+          supabase.from('admin_credentials').select('*').eq('id', 'default').maybeSingle(),
+        ]);
 
         if (ignore) return;
 
-        if (error && error.code !== 'PGRST116') {
-          console.error('Supabase load error:', error);
+        // 1. General Settings
+        if (genRes.data) {
+          const g = genRes.data;
+          setGeneral((prev) => ({
+            ...prev,
+            webTitle: g.web_title ?? prev.webTitle,
+            faviconUrl: g.favicon_url ?? prev.faviconUrl,
+            logoText: g.logo_text ?? prev.logoText,
+            navbarLogoUrl: g.navbar_logo_url ?? prev.navbarLogoUrl,
+            badgeText: g.badge_text ?? prev.badgeText,
+            heroKatakana: g.hero_katakana ?? prev.heroKatakana,
+            heroBigText: g.hero_big_text ?? prev.heroBigText,
+            heroSignature: g.hero_signature ?? prev.heroSignature,
+            heroImageUrl: g.hero_image_url ?? prev.heroImageUrl,
+            currentStatusTitle: g.current_status_title ?? prev.currentStatusTitle,
+            currentStatusText: g.current_status_text ?? prev.currentStatusText,
+            newsLabel: g.news_label ?? prev.newsLabel,
+            heroIntro: g.hero_intro ?? prev.heroIntro,
+            heroDescription: g.hero_description ?? prev.heroDescription,
+            heroQuote: g.hero_quote ?? prev.heroQuote,
+            heroQuoteAuthor: g.hero_quote_author ?? prev.heroQuoteAuthor,
+            jikosoukaiTitle: g.jikosoukai_title ?? prev.jikosoukaiTitle,
+            heroMetaText: g.hero_meta_text ?? prev.heroMetaText,
+          }));
+          if (g.is_dark !== undefined) setIsDark(g.is_dark);
+          if (g.primary_color) setPrimaryColor(g.primary_color);
+          if (g.secondary_color) setSecondaryColor(g.secondary_color);
         }
 
-        if (data?.content) {
-          applyRemoteSnapshot(
-            data.content as Partial<PortfolioSnapshot>,
-            setIsDark,
-            setPrimaryColor,
-            setSecondaryColor,
-            setGeneral,
-            setPersonal,
-            setProjects,
-            setCertificates,
-            setAwards,
-            setContacts,
-            setContactSettings,
-            setAdminCredentials,
+        // 2. Personal Info
+        if (perRes.data) {
+          const p = perRes.data;
+          setPersonal((prev) => ({
+            ...prev,
+            name: p.name ?? prev.name,
+            nickname: p.nickname ?? prev.nickname,
+            role: p.role ?? prev.role,
+            greeting: p.greeting ?? prev.greeting,
+            bio: p.bio ?? prev.bio,
+            aboutImageUrl: p.about_image_url ?? prev.aboutImageUrl,
+            cvUrl: p.cv_url ?? prev.cvUrl,
+            skills: Array.isArray(p.skills) && p.skills.length > 0 ? p.skills : prev.skills,
+          }));
+        }
+
+        // 3. Education List
+        if (eduRes.data && eduRes.data.length > 0) {
+          setPersonal((prev) => ({
+            ...prev,
+            education: eduRes.data.map((e: { id: string; institution: string; major: string; sub_detail?: string; period?: string }) => ({
+              id: e.id,
+              institution: e.institution,
+              major: e.major,
+              subDetail: e.sub_detail ?? '',
+              period: e.period ?? '',
+            })),
+          }));
+        }
+
+        // 4. Experience List
+        if (expRes.data && expRes.data.length > 0) {
+          setPersonal((prev) => ({
+            ...prev,
+            experience: expRes.data.map((x: { id: string; company: string; role: string; sub_detail?: string; period?: string }) => ({
+              id: x.id,
+              company: x.company,
+              role: x.role,
+              subDetail: x.sub_detail ?? '',
+              period: x.period ?? '',
+            })),
+          }));
+        }
+
+        // 5. Projects
+        if (projRes.data && projRes.data.length > 0) {
+          setProjects(
+            projRes.data.map((pr: { id: string; title: string; category?: string; description?: string; tags?: string[]; github?: string; demo?: string; image_url?: string }) => ({
+              id: pr.id,
+              title: pr.title,
+              category: pr.category ?? '',
+              description: pr.description ?? '',
+              tags: Array.isArray(pr.tags) ? pr.tags : [],
+              github: pr.github ?? '#',
+              demo: pr.demo ?? '#',
+              imageUrl: pr.image_url ?? '',
+            }))
           );
         }
-      } catch (remoteError) {
-        console.error('Failed to load remote portfolio data:', remoteError);
+
+        // 6. Certificates
+        if (certRes.data && certRes.data.length > 0) {
+          setCertificates(
+            certRes.data.map((c: { id: string; title: string; issuer?: string; year?: string; credential_id?: string; credential_url?: string; image_url?: string }) => ({
+              id: c.id,
+              title: c.title,
+              issuer: c.issuer ?? '',
+              year: c.year ?? '',
+              credentialId: c.credential_id ?? '',
+              credentialUrl: c.credential_url ?? '',
+              imageUrl: c.image_url ?? '',
+            }))
+          );
+        }
+
+        // 7. Awards
+        if (awardRes.data && awardRes.data.length > 0) {
+          setAwards(
+            awardRes.data.map((a: { id: string; title: string; issuer?: string; year?: string; description?: string; image_url?: string }) => ({
+              id: a.id,
+              title: a.title,
+              issuer: a.issuer ?? '',
+              year: a.year ?? '',
+              description: a.description ?? '',
+              imageUrl: a.image_url ?? '',
+            }))
+          );
+        }
+
+        // 8. Contacts
+        if (contRes.data && contRes.data.length > 0) {
+          setContacts(
+            contRes.data.map((ct: { id: string; platform: string; label: string; url: string }) => ({
+              id: ct.id,
+              platform: ct.platform,
+              label: ct.label,
+              url: ct.url,
+            }))
+          );
+        }
+
+        // 9. Contact Settings
+        if (cSetRes.data) {
+          setContactSettings({
+            title: cSetRes.data.title ?? DEFAULT_CONTACT_SETTINGS.title,
+            description: cSetRes.data.description ?? DEFAULT_CONTACT_SETTINGS.description,
+          });
+        }
+
+        // 10. Admin Credentials
+        if (admRes.data) {
+          setAdminCredentials({
+            username: admRes.data.username ?? DEFAULT_ADMIN_CREDENTIALS.username,
+            password: admRes.data.password ?? DEFAULT_ADMIN_CREDENTIALS.password,
+          });
+        }
+      } catch (err) {
+        console.error('Gagal mengambil data tabel Supabase:', err);
       } finally {
         if (!ignore) setIsRemoteLoaded(true);
       }
     };
 
-    void loadRemoteData();
+    void loadFromSupabaseTables();
 
     return () => {
       ignore = true;
     };
   }, []);
 
+  // ================= SIMPAN KE SEMUA TABEL SUPABASE =================
+  const savePortfolio = async () => {
+    if (!supabase || !isRemoteLoaded) return;
+    setIsSaving(true);
+
+    try {
+      await Promise.all([
+        // 1. General Settings Table
+        supabase.from('general_settings').upsert({
+          id: 'default',
+          web_title: general.webTitle,
+          favicon_url: general.faviconUrl,
+          logo_text: general.logoText,
+          navbar_logo_url: general.navbarLogoUrl,
+          badge_text: general.badgeText,
+          hero_katakana: general.heroKatakana,
+          hero_big_text: general.heroBigText,
+          hero_signature: general.heroSignature,
+          hero_image_url: general.heroImageUrl,
+          current_status_title: general.currentStatusTitle,
+          current_status_text: general.currentStatusText,
+          news_label: general.newsLabel,
+          hero_intro: general.heroIntro,
+          hero_description: general.heroDescription,
+          hero_quote: general.heroQuote,
+          hero_quote_author: general.heroQuoteAuthor,
+          jikosoukai_title: general.jikosoukaiTitle,
+          hero_meta_text: general.heroMetaText,
+          primary_color: primaryColor,
+          secondary_color: secondaryColor,
+          is_dark: isDark,
+          updated_at: new Date().toISOString(),
+        }),
+
+        // 2. Personal Info Table
+        supabase.from('personal_info').upsert({
+          id: 'default',
+          name: personal.name,
+          nickname: personal.nickname,
+          role: personal.role,
+          greeting: personal.greeting,
+          bio: personal.bio,
+          about_image_url: personal.aboutImageUrl,
+          cv_url: personal.cvUrl,
+          skills: personal.skills,
+          updated_at: new Date().toISOString(),
+        }),
+
+        // 3. Education Table (Hapus lalu masukkan list terbaru)
+        (async () => {
+          await supabase.from('education').delete().neq('id', '');
+          if (personal.education && personal.education.length > 0) {
+            await supabase.from('education').insert(
+              personal.education.map((e) => ({
+                id: e.id,
+                institution: e.institution,
+                major: e.major,
+                sub_detail: e.subDetail,
+                period: e.period,
+              }))
+            );
+          }
+        })(),
+
+        // 4. Experience Table
+        (async () => {
+          await supabase.from('experience').delete().neq('id', '');
+          if (personal.experience && personal.experience.length > 0) {
+            await supabase.from('experience').insert(
+              personal.experience.map((x) => ({
+                id: x.id,
+                company: x.company,
+                role: x.role,
+                sub_detail: x.subDetail,
+                period: x.period,
+              }))
+            );
+          }
+        })(),
+
+        // 5. Projects Table
+        (async () => {
+          await supabase.from('projects').delete().neq('id', '');
+          if (projects && projects.length > 0) {
+            await supabase.from('projects').insert(
+              projects.map((p) => ({
+                id: p.id,
+                title: p.title,
+                category: p.category,
+                description: p.description,
+                tags: p.tags,
+                github: p.github,
+                demo: p.demo,
+                image_url: p.imageUrl ?? '',
+              }))
+            );
+          }
+        })(),
+
+        // 6. Certificates Table
+        (async () => {
+          await supabase.from('certificates').delete().neq('id', '');
+          if (certificates && certificates.length > 0) {
+            await supabase.from('certificates').insert(
+              certificates.map((c) => ({
+                id: c.id,
+                title: c.title,
+                issuer: c.issuer,
+                year: c.year,
+                credential_id: c.credentialId,
+                credential_url: c.credentialUrl ?? '',
+                image_url: c.imageUrl ?? '',
+              }))
+            );
+          }
+        })(),
+
+        // 7. Awards Table
+        (async () => {
+          await supabase.from('awards').delete().neq('id', '');
+          if (awards && awards.length > 0) {
+            await supabase.from('awards').insert(
+              awards.map((a) => ({
+                id: a.id,
+                title: a.title,
+                issuer: a.issuer,
+                year: a.year,
+                description: a.description,
+                image_url: a.imageUrl ?? '',
+              }))
+            );
+          }
+        })(),
+
+        // 8. Contacts Table
+        (async () => {
+          await supabase.from('contacts').delete().neq('id', '');
+          if (contacts && contacts.length > 0) {
+            await supabase.from('contacts').insert(
+              contacts.map((ct) => ({
+                id: ct.id,
+                platform: ct.platform,
+                label: ct.label,
+                url: ct.url,
+              }))
+            );
+          }
+        })(),
+
+        // 9. Contact Settings Table
+        supabase.from('contact_settings').upsert({
+          id: 'default',
+          title: contactSettings.title,
+          description: contactSettings.description,
+          updated_at: new Date().toISOString(),
+        }),
+
+        // 10. Admin Credentials Table
+        supabase.from('admin_credentials').upsert({
+          id: 'default',
+          username: adminCredentials.username,
+          password: adminCredentials.password,
+          updated_at: new Date().toISOString(),
+        }),
+      ]);
+    } catch (error) {
+      console.error('Error saat menyimpan ke tabel Supabase:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // LocalStorage Sync (sebagai cadangan offline)
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -599,16 +813,13 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
 
-  // Toggle Theme: Menukar otomatis Primary & Secondary (Hitam <-> Putih)
   const toggleTheme = () => {
     setIsDark((prev: boolean) => {
       const nextIsDark = !prev;
       if (nextIsDark) {
-        // Mode Gelap: Primary Hitam, Secondary Putih
         setPrimaryColor('#000000');
         setSecondaryColor('#ffffff');
       } else {
-        // Mode Terang: Primary Putih, Secondary Hitam
         setPrimaryColor('#ffffff');
         setSecondaryColor('#000000');
       }
@@ -644,7 +855,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const removeSkill = (skillToRemove: string) => {
     setPersonal((prev: PersonalInfo) => ({
       ...prev,
-      skills: prev.skills.filter((s: string) => s !== skillToRemove)
+      skills: prev.skills.filter((s: string) => s !== skillToRemove),
     }));
   };
 
@@ -652,14 +863,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     const newItem: EducationItem = { ...edu, id: Date.now().toString() };
     setPersonal((prev: PersonalInfo) => ({
       ...prev,
-      education: [...(prev.education || []), newItem]
+      education: [...(prev.education || []), newItem],
     }));
   };
 
   const deleteEducation = (id: string) => {
     setPersonal((prev: PersonalInfo) => ({
       ...prev,
-      education: (prev.education || []).filter((e: EducationItem) => e.id !== id)
+      education: (prev.education || []).filter((e: EducationItem) => e.id !== id),
     }));
   };
 
@@ -667,14 +878,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     const newItem: ExperienceItem = { ...exp, id: Date.now().toString() };
     setPersonal((prev: PersonalInfo) => ({
       ...prev,
-      experience: [...(prev.experience || []), newItem]
+      experience: [...(prev.experience || []), newItem],
     }));
   };
 
   const deleteExperience = (id: string) => {
     setPersonal((prev: PersonalInfo) => ({
       ...prev,
-      experience: (prev.experience || []).filter((e: ExperienceItem) => e.id !== id)
+      experience: (prev.experience || []).filter((e: ExperienceItem) => e.id !== id),
     }));
   };
 
@@ -735,44 +946,46 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <PortfolioContext.Provider value={{
-      isDark,
-      toggleTheme,
-      primaryColor,
-      setPrimaryColor,
-      secondaryColor,
-      setSecondaryColor,
-      resetTheme,
-      general,
-      updateGeneral,
-      personal,
-      updatePersonal,
-      addSkill,
-      removeSkill,
-      addEducation,
-      deleteEducation,
-      addExperience,
-      deleteExperience,
-      projects,
-      addProject,
-      deleteProject,
-      certificates,
-      addCertificate,
-      deleteCertificate,
-      awards,
-      addAward,
-      deleteAward,
-      contacts,
-      addContact,
-      deleteContact,
-      contactSettings,
-      updateContactSettings,
-      adminCredentials,
-      updateAdminCredentials,
-      isSaving,
-      savePortfolio,
-      resetAllData
-    }}>
+    <PortfolioContext.Provider
+      value={{
+        isDark,
+        toggleTheme,
+        primaryColor,
+        setPrimaryColor,
+        secondaryColor,
+        setSecondaryColor,
+        resetTheme,
+        general,
+        updateGeneral,
+        personal,
+        updatePersonal,
+        addSkill,
+        removeSkill,
+        addEducation,
+        deleteEducation,
+        addExperience,
+        deleteExperience,
+        projects,
+        addProject,
+        deleteProject,
+        certificates,
+        addCertificate,
+        deleteCertificate,
+        awards,
+        addAward,
+        deleteAward,
+        contacts,
+        addContact,
+        deleteContact,
+        contactSettings,
+        updateContactSettings,
+        adminCredentials,
+        updateAdminCredentials,
+        isSaving,
+        savePortfolio,
+        resetAllData,
+      }}
+    >
       {children}
     </PortfolioContext.Provider>
   );

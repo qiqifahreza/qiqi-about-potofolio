@@ -33,8 +33,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
             <label className="text-xs font-medium text-slate-300 block mb-1">Judul Tab Browser:</label>
             <input 
               type="text" 
-              value={general.webTitle || ''} 
+              value={general.webTitle ?? ''} 
               onChange={(e) => updateGeneral({ webTitle: e.target.value })}
+              placeholder="Mochamad Rifki Al Farizi - Portfolio"
               className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
             />
           </div>
@@ -42,15 +43,16 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
             <label className="text-xs font-medium text-slate-300 block mb-1">Teks Logo Navbar:</label>
             <input 
               type="text" 
-              value={general.logoText} 
+              value={general.logoText ?? ''} 
               onChange={(e) => updateGeneral({ logoText: e.target.value })}
+              placeholder="Rifki"
               className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs font-mono"
             />
           </div>
           <div>
             <ImageInputControl
               label="Icon Logo Tab Browser (Favicon):"
-              value={general.faviconUrl || ''}
+              value={general.faviconUrl ?? ''}
               onChange={(val) => updateGeneral({ faviconUrl: val })}
               accentColor={primaryColor}
             />
@@ -58,7 +60,7 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <div>
             <ImageInputControl
               label="Gambar Logo Navbar (Opsional):"
-              value={general.navbarLogoUrl || ''}
+              value={general.navbarLogoUrl ?? ''}
               onChange={(val) => updateGeneral({ navbarLogoUrl: val })}
               accentColor={primaryColor}
             />
@@ -129,29 +131,51 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">Foto Model Khusus Beranda (Hero Cutout)</h3>
         <ImageInputControl
           label="Pilih Foto Khusus Beranda:"
-          value={general.heroImageUrl}
+          value={general.heroImageUrl ?? ''}
           onChange={(val) => updateGeneral({ heroImageUrl: val })}
           accentColor={primaryColor}
         />
       </div>
 
-      {/* 4. Hero Magazine Details (Sesuai Screenshot Referensi) */}
+      {/* 4. Hero Magazine Details (BEBAS DIHAPUS SAMPAI KOSONG) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1">Badge Teks Hero (Kiri Atas):</label>
           <input 
             type="text" 
-            value={general.badgeText} 
+            value={general.badgeText ?? ''} 
             onChange={(e) => updateGeneral({ badgeText: e.target.value })}
+            placeholder="DEV 2026"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs font-mono"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-slate-400 block mb-1">Judul Jikosoukai (Kiri Atas):</label>
+          <input 
+            type="text" 
+            value={general.jikosoukaiTitle ?? ''} 
+            onChange={(e) => updateGeneral({ jikosoukaiTitle: e.target.value })}
+            placeholder="JIKOSOUKAI"
+            className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs font-mono uppercase"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-slate-400 block mb-1">Teks Tanggal / Info (Kanan Atas):</label>
+          <input 
+            type="text" 
+            value={general.heroMetaText ?? ''} 
+            onChange={(e) => updateGeneral({ heroMetaText: e.target.value })}
+            placeholder="Rifki.09-01-2006"
+            className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs font-serif italic"
           />
         </div>
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1">Teks Katakana Jepang (Atas Nama):</label>
           <input 
             type="text" 
-            value={general.heroKatakana} 
+            value={general.heroKatakana ?? ''} 
             onChange={(e) => updateGeneral({ heroKatakana: e.target.value })}
+            placeholder="モハマド・リフキ"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
@@ -159,8 +183,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Teks Besar Serif (Contoh: RIFKI):</label>
           <input 
             type="text" 
-            value={general.heroBigText} 
+            value={general.heroBigText ?? ''} 
             onChange={(e) => updateGeneral({ heroBigText: e.target.value })}
+            placeholder="RIFKI"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs font-serif"
           />
         </div>
@@ -168,17 +193,19 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Teks Sambung Signature (Contoh: Al Farizi):</label>
           <input 
             type="text" 
-            value={general.heroSignature} 
+            value={general.heroSignature ?? ''} 
             onChange={(e) => updateGeneral({ heroSignature: e.target.value })}
+            placeholder="Al Farizi"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
         <div className="sm:col-span-2">
-          <label className="text-xs font-medium text-slate-400 block mb-1">Jikosoukai Intro Teks (Kiri Atas):</label>
+          <label className="text-xs font-medium text-slate-400 block mb-1">Teks Isi Jikosoukai (Kiri Atas):</label>
           <textarea 
             rows={2}
-            value={general.heroIntro} 
+            value={general.heroIntro ?? ''} 
             onChange={(e) => updateGeneral({ heroIntro: e.target.value })}
+            placeholder="Tuliskan intro perkenalan..."
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
@@ -186,8 +213,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Judul Status / News (Kiri Bawah):</label>
           <input 
             type="text" 
-            value={general.currentStatusTitle} 
+            value={general.currentStatusTitle ?? ''} 
             onChange={(e) => updateGeneral({ currentStatusTitle: e.target.value })}
+            placeholder="Current Status !!"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
@@ -195,8 +223,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Quote Author (Kanan Bawah):</label>
           <input 
             type="text" 
-            value={general.heroQuoteAuthor} 
+            value={general.heroQuoteAuthor ?? ''} 
             onChange={(e) => updateGeneral({ heroQuoteAuthor: e.target.value })}
+            placeholder="~Mochamad Rifki Al Farizi~"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
@@ -204,10 +233,11 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Deskripsi News (Kiri Bawah):</label>
           <textarea 
             rows={2}
-            value={general.heroDescription || general.currentStatusText} 
+            value={general.heroDescription ?? general.currentStatusText ?? ''} 
             onChange={(e) => {
               updateGeneral({ heroDescription: e.target.value, currentStatusText: e.target.value });
             }}
+            placeholder="Deskripsi status atau berita..."
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>
@@ -215,8 +245,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">The Question Is Quote (Kanan Bawah):</label>
           <input 
             type="text" 
-            value={general.heroQuote} 
+            value={general.heroQuote ?? ''} 
             onChange={(e) => updateGeneral({ heroQuote: e.target.value })}
+            placeholder="It's not impossible, it's just hard"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
         </div>

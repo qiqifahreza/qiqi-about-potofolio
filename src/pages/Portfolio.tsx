@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import {
   ArrowRight,
   Award,
@@ -15,8 +15,20 @@ import type { AwardItem, CertificateItem, ProjectItem } from '../context/Portfol
 
 type TabKey = 'projects' | 'certificates' | 'awards';
 
+interface PortfolioTabItem {
+  key: TabKey;
+  label: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+}
+
+const PORTFOLIO_TABS: PortfolioTabItem[] = [
+  { key: 'projects', label: 'Projects', icon: Code2 },
+  { key: 'certificates', label: 'Certificates', icon: Award },
+  { key: 'awards', label: 'Awards', icon: Trophy },
+];
+
 export default function Portfolio() {
-  const { isDark, primaryColor, projects, certificates, awards } = usePortfolio();
+  const { isDark, projects, certificates, awards } = usePortfolio();
 
   const themeTitle = isDark ? 'text-white' : 'text-zinc-900';
   const themeBody = isDark ? 'text-slate-300' : 'text-slate-700';
@@ -27,6 +39,42 @@ export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Liquid Gel State untuk Tab Bar Portfolio
+  const [isTabWobbling, setIsTabWobbling] = useState(false);
+  const tabContainerRef = useRef<HTMLDivElement>(null);
+  const tabButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const tabIndicatorRef = useRef<HTMLSpanElement | null>(null);
+
+  const syncTabIndicator = useCallback((targetKey: TabKey) => {
+    if (!tabContainerRef.current || !tabIndicatorRef.current) return;
+
+    const targetIndex = PORTFOLIO_TABS.findIndex((t) => t.key === targetKey);
+    const targetElement = tabButtonsRef.current[targetIndex];
+
+    if (!targetElement) return;
+
+    const parentRect = tabContainerRef.current.getBoundingClientRect();
+    const targetRect = targetElement.getBoundingClientRect();
+
+    tabIndicatorRef.current.style.left = `${targetRect.left - parentRect.left}px`;
+    tabIndicatorRef.current.style.width = `${targetRect.width}px`;
+    tabIndicatorRef.current.style.opacity = '1';
+
+    setIsTabWobbling(true);
+    const timer = setTimeout(() => setIsTabWobbling(false), 550);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    syncTabIndicator(activeTab);
+  }, [activeTab, syncTabIndicator]);
+
+  useEffect(() => {
+    const handleResize = () => syncTabIndicator(activeTab);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeTab, syncTabIndicator]);
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -53,27 +101,6 @@ export default function Portfolio() {
     'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=800',
   ];
 
-  const getContrastTextColor = (hexColor: string) => {
-    const cleaned = hexColor.replace('#', '');
-    const normalized = cleaned.length === 3
-      ? cleaned.split('').map((char) => char + char).join('')
-      : cleaned;
-
-    const r = Number.parseInt(normalized.slice(0, 2), 16);
-    const g = Number.parseInt(normalized.slice(2, 4), 16);
-    const b = Number.parseInt(normalized.slice(4, 6), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-    return luminance > 0.6 ? '#000000' : '#ffffff';
-  };
-
-  const getTabButtonClass = (tab: TabKey) =>
-    `flex items-center gap-2 px-6 sm:px-8 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 ease-out ${
-      activeTab === tab
-        ? 'liquid-glass shadow-lg scale-100'
-        : 'text-zinc-500 hover:text-black hover:bg-white/20 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-white/5 hover:shadow-md hover:scale-[1.01]'
-    }`;
-
   return (
     <section id="projek" className="page-fade-up relative z-10 py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.06] overflow-hidden">
@@ -84,52 +111,78 @@ export default function Portfolio() {
         </svg>
       </div>
 
+      {/* ================= TAB BAR PORTFOLIO DENGAN ANIMASI LIQUID GEL BUBBLE ================= */}
       <div className="flex justify-center mb-16 relative z-20">
-        <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-3xl liquid-glass bg-white/70 dark:bg-zinc-900/80 border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-2xl max-w-full">
-          <button
-            type="button"
-            aria-pressed={activeTab === 'projects'}
-            onClick={() => setActiveTab('projects')}
-            className={`${getTabButtonClass('projects')} flex-1 sm:flex-none`}
+        <div 
+          ref={tabContainerRef}
+          className="relative inline-flex items-center p-1.5 rounded-full glass-panel bg-white/70 dark:bg-zinc-900/80 border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-2xl"
+        >
+          {/* LIQUID WATER DROPLET BUBBLE FOR TABS */}
+          <span
+            ref={tabIndicatorRef}
+            aria-hidden="true"
+            className={`absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full pointer-events-none z-0 overflow-hidden transition-all duration-450 ease-[cubic-bezier(0.25,1.4,0.45,1)] ${
+              isTabWobbling ? 'animate-liquid-jelly' : ''
+            }`}
             style={{
-              backgroundColor: activeTab === 'projects' ? primaryColor : 'transparent',
-              color: activeTab === 'projects' ? getContrastTextColor(primaryColor) : undefined,
-              boxShadow: activeTab === 'projects' ? `0 12px 30px ${primaryColor}55` : 'none',
+              left: "0px",
+              width: "0px",
+              opacity: 0,
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              background: isDark
+                ? "linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08))"
+                : "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 253, 250, 0.75))",
+              border: isDark
+                ? "1.5px solid rgba(255, 255, 255, 0.35)"
+                : "1.5px solid rgba(204, 251, 241, 0.85)",
+              boxShadow: isDark
+                ? "inset 0 2px 4px rgba(255, 255, 255, 0.45), inset 0 -2px 6px rgba(0, 0, 0, 0.3), 0 8px 24px -2px rgba(0, 0, 0, 0.6)"
+                : "inset 0 2.5px 5px rgba(255, 255, 255, 0.95), inset 0 -2px 6px rgba(45, 212, 191, 0.25), 0 8px 20px -3px rgba(45, 212, 191, 0.3), 0 2px 8px rgba(0, 0, 0, 0.06)",
             }}
           >
-            <Code2 size={16} />
-            Projects
-          </button>
+            {/* Specular curved reflection */}
+            <span 
+              className="absolute inset-x-0 top-0 h-[48%] rounded-t-full pointer-events-none"
+              style={{
+                background: isDark
+                  ? "radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.08) 70%, transparent 100%)"
+                  : "radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.2) 70%, transparent 100%)",
+              }}
+            />
+          </span>
 
-          <button
-            type="button"
-            aria-pressed={activeTab === 'certificates'}
-            onClick={() => setActiveTab('certificates')}
-            className={`${getTabButtonClass('certificates')} flex-1 sm:flex-none`}
-            style={{
-              backgroundColor: activeTab === 'certificates' ? primaryColor : 'transparent',
-              color: activeTab === 'certificates' ? getContrastTextColor(primaryColor) : undefined,
-              boxShadow: activeTab === 'certificates' ? `0 12px 30px ${primaryColor}55` : 'none',
-            }}
-          >
-            <Award size={16} />
-            Certificates
-          </button>
+          {PORTFOLIO_TABS.map((tab, idx) => {
+            const isActive = activeTab === tab.key;
+            const IconComp = tab.icon;
 
-          <button
-            type="button"
-            aria-pressed={activeTab === 'awards'}
-            onClick={() => setActiveTab('awards')}
-            className={`${getTabButtonClass('awards')} flex-1 sm:flex-none`}
-            style={{
-              backgroundColor: activeTab === 'awards' ? primaryColor : 'transparent',
-              color: activeTab === 'awards' ? getContrastTextColor(primaryColor) : undefined,
-              boxShadow: activeTab === 'awards' ? `0 12px 30px ${primaryColor}55` : 'none',
-            }}
-          >
-            <Trophy size={16} />
-            Awards
-          </button>
+            return (
+              <button
+                key={tab.key}
+                ref={(el) => {
+                  tabButtonsRef.current[idx] = el;
+                }}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  requestAnimationFrame(() => syncTabIndicator(tab.key));
+                }}
+                className={`relative z-10 flex items-center gap-2 px-6 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer select-none ${
+                  isActive
+                    ? (isDark 
+                        ? 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]' 
+                        : 'text-zinc-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]')
+                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+                }`}
+              >
+                <span className={`transition-transform duration-300 ${isActive ? 'scale-115 text-teal-500 dark:text-cyan-400' : 'opacity-70'}`}>
+                  <IconComp size={16} />
+                </span>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -262,7 +315,7 @@ export default function Portfolio() {
               ))
             ) : (
               <div className={`w-full min-h-[220px] flex flex-col items-center justify-center text-center p-8 glass-panel rounded-3xl border ${isDark ? 'border-white/20' : 'border-zinc-200'}`}>
-                <Trophy size={40} className="mb-3 opacity-40" style={{ color: primaryColor }} />
+                <Trophy size={40} className="mb-3 opacity-40" />
                 <h3 className={`text-base font-bold mb-1 ${themeTitle}`}>Belum Ada Penghargaan</h3>
                 <p className={`text-xs max-w-sm ${themeMuted}`}>Tambahkan sertifikat juara atau kompetisi melalui panel Admin di tab Awards.</p>
               </div>
@@ -272,7 +325,7 @@ export default function Portfolio() {
 
       {selectedProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-          <div className={`w-full max-w-xl glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl relative border ${isDark ? 'bg-zinc-900/95 border-white/20' : 'bg-white/90 border-zinc-200'}`}>
+          <div className={`w-full max-w-xl glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl relative border ${isDark ? 'bg-zinc-900/95 border-white/20' : 'bg-white/90 border-zinc-200'} text-zinc-900 dark:text-white`}>
             <button
               onClick={() => setSelectedProject(null)}
               className="absolute top-5 right-5 p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition"
@@ -297,7 +350,7 @@ export default function Portfolio() {
             </p>
 
             <div className="mb-6">
-              <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${themeMuted}`}>Teknologi Digunakan:</h4>
+              <h4 className={`text-xs font-bold uppercase tracking-wider opacity-60 mb-2`}>Teknologi Digunakan:</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedProject.tags.map((tag: string) => (
                   <span
