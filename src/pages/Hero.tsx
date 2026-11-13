@@ -3,12 +3,12 @@ import { usePortfolio } from '../context/PortfolioContext';
 export default function Hero() {
   const { general, personal, isDark } = usePortfolio();
 
-  const bigLetters = (general.heroBigText || 'RIFKI').split('');
+  const bigLetters = general.heroBigText ? general.heroBigText.split('') : [];
 
   return (
     <section id="beranda" className="scroll-fade-in min-h-screen pt-24 pb-12 px-3 sm:px-6 flex items-center justify-center select-none">
       
-      {/* BINGKAI KOTAK EDITORIAL MAJALAH (BORDER FRAME) */}
+      {/* BINGKAI KOTAK EDITORIAL MAJALAH */}
       <div 
         className={`relative w-full max-w-[1380px] min-h-[760px] lg:h-[88vh] rounded-[2rem] p-6 sm:p-10 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300 border ${
           isDark 
@@ -22,29 +22,33 @@ export default function Hero() {
           
           {/* Top-Left: Badge & Jikosoukai */}
           <div className="flex items-start gap-4 max-w-sm sm:max-w-md">
-            {/* Box Badge */}
-            <div className={`flex flex-col items-center border px-2.5 py-1 shrink-0 ${isDark ? 'border-white' : 'border-zinc-900'}`}>
-              <span className="text-[11px] font-bold tracking-widest font-mono leading-none">DEV</span>
-              <span className="text-[9px] font-mono leading-none mt-0.5">2026</span>
-              <div className={`w-full text-[8px] font-mono text-center px-1 mt-1 font-semibold tracking-tighter ${
-                isDark ? 'bg-white text-black' : 'bg-zinc-900 text-white'
-              }`}>
-                {general.badgeText || 'PROFILE'}
+            {general.badgeText && (
+              <div className={`flex flex-col items-center border px-2.5 py-1 shrink-0 ${isDark ? 'border-white' : 'border-zinc-900'}`}>
+                <span className="text-[11px] font-bold tracking-widest font-mono leading-none">DEV</span>
+                <span className="text-[9px] font-mono leading-none mt-0.5">2026</span>
+                <div className={`w-full text-[8px] font-mono text-center px-1 mt-1 font-semibold tracking-tighter ${
+                  isDark ? 'bg-white text-black' : 'bg-zinc-900 text-white'
+                }`}>
+                  {general.badgeText}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Jikosoukai Heading & Intro Dinamis */}
             <div className="leading-snug">
-              <h2 className="text-xs font-black tracking-[0.2em] uppercase font-mono">
-                {general.jikosoukaiTitle || 'JIKOSOUKAI'}
-              </h2>
-              <p className="text-[11px] sm:text-xs mt-1 italic font-serif opacity-80 whitespace-pre-line leading-relaxed">
-                {general.heroIntro || "Seperti pizza yang dinanti-nantikan semua orang, selalu nantikan aku ya!\nHalo, saya Mochamad Rifki Al Farizi!"}
-              </p>
+              {general.jikosoukaiTitle && (
+                <h2 className="text-xs font-black tracking-[0.2em] uppercase font-mono">
+                  {general.jikosoukaiTitle}
+                </h2>
+              )}
+              {general.heroIntro && (
+                <p className="text-[11px] sm:text-xs mt-1 italic font-serif opacity-80 whitespace-pre-line leading-relaxed">
+                  {general.heroIntro}
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Top-Right: Barcode Garis Gantung & Teks Info Dinamis */}
+          {/* Top-Right: Barcode Garis Gantung & Info Meta */}
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-[3px] h-10 mb-3 opacity-80">
               {[38, 22, 35, 14, 28, 42, 18, 32, 12, 26, 40, 16, 30].map((h, i) => (
@@ -56,92 +60,110 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* Teks Tanggal / Info Dinamis (cth: Rifki.09-01-2006) */}
-            <p className="text-xs italic font-serif tracking-wider opacity-80">
-              {general.heroMetaText || `${personal.nickname || 'Rifki'}.09-01-2006`}
-            </p>
-            <p className="text-[11px] font-mono tracking-tight opacity-60 uppercase mt-0.5">
-              Project By {personal.name || 'Mochamad Rifki Al Farizi'}
-            </p>
+            {general.heroMetaText && (
+              <p className="text-xs italic font-serif tracking-wider opacity-80">
+                {general.heroMetaText}
+              </p>
+            )}
+            {personal.name && (
+              <p className="text-[11px] font-mono tracking-tight opacity-60 uppercase mt-0.5">
+                Project By {personal.name}
+              </p>
+            )}
           </div>
         </div>
 
         {/* ================= CENTER HERO ================= */}
-        <div className="relative flex-1 flex items-center justify-center my-auto">
+        <div className="relative flex-1 flex items-center justify-center my-auto min-h-[350px]">
           
-          {/* Katakana Jepang di Kiri Atas Nama */}
-          <div 
-            style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
-            className="absolute top-[2%] sm:top-[6%] left-2 sm:left-10 z-10 text-2xl sm:text-4xl font-light tracking-[0.35em] opacity-80"
-          >
-            {general.heroKatakana || 'モハマド・リフキ'}
-          </div>
-
-          {/* TEKS SERIF BESAR (DI BELAKANG FOTO) */}
-          <div className="absolute inset-0 flex items-center justify-between w-full pointer-events-none z-10">
-            <h1 
-              style={{ fontFamily: "'Playfair Display', serif" }} 
-              className="w-full text-center text-[18vw] sm:text-[17vw] font-normal tracking-[0.08em] sm:tracking-[0.14em] flex justify-between leading-none opacity-95 select-none"
+          {/* Katakana Jepang */}
+          {general.heroKatakana && (
+            <div 
+              style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
+              className="absolute top-[2%] sm:top-[6%] left-2 sm:left-10 z-10 text-2xl sm:text-4xl font-light tracking-[0.35em] opacity-80"
             >
-              {bigLetters.map((char, index) => (
-                <span key={index}>{char}</span>
-              ))}
-            </h1>
-          </div>
+              {general.heroKatakana}
+            </div>
+          )}
 
-          {/* FOTO MODEL CUTOUT TENGAH (Posisi Diturunkan Mendekati Border) */}
-          <div className="relative z-20 h-[48vh] sm:h-[62vh] flex items-end justify-center pointer-events-none translate-y-8 sm:translate-y-12 lg:translate-y-16">
-            <img 
-              src={general.heroImageUrl} 
-              alt={personal.name} 
-              className="h-full w-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] filter contrast-105"
-            />
-          </div>
+          {/* Teks Huruf Besar di Belakang Foto */}
+          {bigLetters.length > 0 && (
+            <div className="absolute inset-0 flex items-center justify-between w-full pointer-events-none z-10">
+              <h1 
+                style={{ fontFamily: "'Playfair Display', serif" }} 
+                className="w-full text-center text-[18vw] sm:text-[17vw] font-normal tracking-[0.08em] sm:tracking-[0.14em] flex justify-between leading-none opacity-95 select-none"
+              >
+                {bigLetters.map((char, index) => (
+                  <span key={index}>{char}</span>
+                ))}
+              </h1>
+            </div>
+          )}
 
-          {/* Tanda Tangan Sambung / Cursive */}
-          <div 
-            style={{ fontFamily: "'Alex Brush', cursive" }}
-            className={`absolute bottom-[2%] sm:bottom-[6%] right-[8%] sm:right-[16%] z-30 text-5xl sm:text-8xl rotate-[-5deg] drop-shadow-md select-none ${
-              isDark ? 'text-white/90' : 'text-zinc-900/90'
-            }`}
-          >
-            {general.heroSignature || 'Al Farizi'}
-          </div>
+          {/* Foto Model Cutout (Hanya tampil jika ada gambarnya) */}
+          {general.heroImageUrl && (
+            <div className="relative z-20 h-[48vh] sm:h-[62vh] flex items-end justify-center pointer-events-none translate-y-8 sm:translate-y-12 lg:translate-y-16">
+              <img 
+                src={general.heroImageUrl} 
+                alt={personal.name || 'Hero'} 
+                className="h-full w-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] filter contrast-105"
+              />
+            </div>
+          )}
+
+          {/* Tanda Tangan Sambung */}
+          {general.heroSignature && (
+            <div 
+              style={{ fontFamily: "'Alex Brush', cursive" }}
+              className={`absolute bottom-[2%] sm:bottom-[6%] right-[8%] sm:right-[16%] z-30 text-5xl sm:text-8xl rotate-[-5deg] drop-shadow-md select-none ${
+                isDark ? 'text-white/90' : 'text-zinc-900/90'
+              }`}
+            >
+              {general.heroSignature}
+            </div>
+          )}
         </div>
 
         {/* ================= BOTTOM SECTION ================= */}
         <div className="flex justify-between items-end z-30 pt-4">
           
-          {/* Bottom-Left: Current News !! */}
           <div className="max-w-xs sm:max-w-sm">
-            <h3 
-              style={{ fontFamily: "'Playfair Display', serif" }} 
-              className="text-base sm:text-lg font-bold italic tracking-wide flex items-center gap-1.5"
-            >
-              {general.currentStatusTitle || 'Current News !!'}
-            </h3>
-            <p className="text-[11px] sm:text-xs opacity-75 font-sans leading-relaxed mt-1">
-              {general.heroDescription || general.currentStatusText || 'Mochamad Rifki Al Farizi adalah Software Engineer yang berfokus membangun antarmuka web modern berkinerja tinggi.'}
-            </p>
+            {general.currentStatusTitle && (
+              <h3 
+                style={{ fontFamily: "'Playfair Display', serif" }} 
+                className="text-base sm:text-lg font-bold italic tracking-wide flex items-center gap-1.5"
+              >
+                {general.currentStatusTitle}
+              </h3>
+            )}
+            {(general.heroDescription || general.currentStatusText) && (
+              <p className="text-[11px] sm:text-xs opacity-75 font-sans leading-relaxed mt-1">
+                {general.heroDescription || general.currentStatusText}
+              </p>
+            )}
           </div>
 
-          {/* Bottom-Right: The Question Is / Quote */}
           <div className="text-right max-w-xs sm:max-w-md pr-8 sm:pr-10">
-            <h4 
-              style={{ fontFamily: "'Playfair Display', serif" }} 
-              className="text-sm sm:text-base font-bold"
-            >
-              The Question Is:
-            </h4>
-            <p className="text-[11px] sm:text-xs italic mt-0.5 opacity-85">
-              "{general.heroQuote || "It's not impossible, it's just hard"}"
-            </p>
-            <span className="text-[10px] font-mono opacity-60 block mt-1">
-              {general.heroQuoteAuthor || '~Mochamad Rifki Al Farizi~'}
-            </span>
+            {general.heroQuote && (
+              <>
+                <h4 
+                  style={{ fontFamily: "'Playfair Display', serif" }} 
+                  className="text-sm sm:text-base font-bold"
+                >
+                  The Question Is:
+                </h4>
+                <p className="text-[11px] sm:text-xs italic mt-0.5 opacity-85">
+                  "{general.heroQuote}"
+                </p>
+              </>
+            )}
+            {general.heroQuoteAuthor && (
+              <span className="text-[10px] font-mono opacity-60 block mt-1">
+                {general.heroQuoteAuthor}
+              </span>
+            )}
           </div>
 
-          {/* Indikator Tegak SCROLL di Sisi Kanan */}
           <div className="absolute right-3 sm:right-4 bottom-10 flex flex-col items-center gap-2 pointer-events-none">
             <span className="text-[9px] font-mono uppercase tracking-[0.3em] rotate-90 opacity-40">
               SCROLL

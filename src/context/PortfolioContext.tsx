@@ -99,136 +99,49 @@ export interface AdminCredentials {
   password: string;
 }
 
-// ================= DATA DEFAULT =================
+// ================= DATA DEFAULT: 100% KOSONG DARI AWAL =================
 const DEFAULT_GENERAL: GeneralSettings = {
-  webTitle: 'Mochamad Rifki Al Farizi',
+  webTitle: '',
   faviconUrl: '',
-  logoText: 'Rifki',
+  logoText: '',
   navbarLogoUrl: '',
-  badgeText: 'DEV 2026',
-  heroKatakana: 'モハマド・リフキ',
-  heroBigText: 'RIFKI',
-  heroSignature: 'Al Farizi',
-  heroImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=900',
-  currentStatusTitle: 'Current Status !!',
-  currentStatusText: 'Mochamad Rifki Al Farizi adalah Software Engineer yang berfokus membangun antarmuka web modern berperforma tinggi.',
-  newsLabel: 'N E W S',
-  heroIntro: 'Seperti pizza yang dinanti-nantikan semua orang, selalu nantikan aku ya!\nHalo aku Marsha!',
-  heroDescription: 'Marsha adalah member JKT48 yang dijuluki sebagai anime hidup karena parasnya yang sangat rupawan.',
-  heroQuote: 'It\'s not impossible, it\'s just hard',
-  heroQuoteAuthor: '~Qiqifahreza~',
-  jikosoukaiTitle: 'JIKOSOUKAI',
-  heroMetaText: 'Rifki.09-01-2006'
+  badgeText: '',
+  heroKatakana: '',
+  heroBigText: '',
+  heroSignature: '',
+  heroImageUrl: '',
+  currentStatusTitle: '',
+  currentStatusText: '',
+  newsLabel: '',
+  heroIntro: '',
+  heroDescription: '',
+  heroQuote: '',
+  heroQuoteAuthor: '',
+  jikosoukaiTitle: '',
+  heroMetaText: ''
 };
 
 const DEFAULT_PERSONAL: PersonalInfo = {
-  name: 'Mochamad Rifki Al Farizi',
-  nickname: 'Rifki',
-  role: 'Software Engineer & Creative Developer',
-  greeting: "Hi, I'm",
-  bio: 'Pengembang perangkat lunak yang berfokus pada arsitektur web modern, integrasi database scalable, dan pengalaman pengguna (UX) yang interaktif dan berkinerja tinggi.',
-  aboutImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=900',
-  cvUrl: 'https://example.com/cv.pdf',
-  skills: ['TypeScript', 'React.js', 'Next.js', 'Node.js', 'PostgreSQL', 'Docker', 'Tailwind CSS', 'Git & Linux'],
-  education: [
-    {
-      id: '1',
-      institution: 'Universitas Brawijaya',
-      major: 'Information Technology Education',
-      subDetail: 'Faculty of Computer Science (FILKOM UB) • Undergraduate',
-      period: '2025 – Present'
-    },
-    {
-      id: '2',
-      institution: 'SMKN 1 Winongan',
-      major: 'Rekayasa Perangkat Lunak (RPL)',
-      subDetail: 'Teknik Komputer dan Informatika',
-      period: '2021 – 2024'
-    }
-  ],
-  experience: [
-    {
-      id: '1',
-      company: 'Google Indonesia',
-      role: 'Google Student Ambassador',
-      subDetail: 'Universitas Brawijaya • Ambassador',
-      period: '2026'
-    },
-    {
-      id: '2',
-      company: 'Google Developer Groups (GDGs) on Campus',
-      role: 'Core Team Member & Web Lead',
-      subDetail: 'Brawijaya University Community',
-      period: '2025 – 2026'
-    }
-  ]
+  name: '',
+  nickname: '',
+  role: '',
+  greeting: '',
+  bio: '',
+  aboutImageUrl: '',
+  cvUrl: '',
+  skills: [],
+  education: [],
+  experience: []
 };
 
-const DEFAULT_PROJECTS: ProjectItem[] = [
-  {
-    id: '1',
-    title: 'Enterprise ERP & Logistics',
-    category: 'Full-Stack Web App',
-    description: 'Sistem manajemen rantai pasok dan inventaris real-time dengan integrasi dashboard analitik performa tinggi.',
-    tags: ['React', 'TypeScript', 'PostgreSQL', 'Tailwind'],
-    github: 'https://github.com/qiqifahreza',
-    demo: 'https://demo.example.com',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: '2',
-    title: 'AI Prompt Engineering Tool',
-    category: 'Productivity Platform',
-    description: 'Aplikasi pembantu kurasi prompt AI generative dengan visual workflow builder berbasis node.',
-    tags: ['Next.js', 'Node.js', 'Express', 'Tailwind'],
-    github: 'https://github.com/qiqifahreza',
-    demo: 'https://demo.example.com',
-    imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800'
-  }
-];
-
-const DEFAULT_CERTIFICATES: CertificateItem[] = [
-  {
-    id: '1',
-    title: 'Meta Front-End Developer Professional',
-    issuer: 'Coursera / Meta',
-    year: '2025',
-    credentialId: 'CR-882194-META',
-    credentialUrl: 'https://coursera.org',
-    imageUrl: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: '2',
-    title: 'AWS Certified Cloud Practitioner',
-    issuer: 'Amazon Web Services',
-    year: '2026',
-    credentialId: 'AWS-CCP-9102',
-    credentialUrl: 'https://aws.amazon.com',
-    imageUrl: 'https://images.unsplash.com/photo-1589330694653-dad6d3240e2b?auto=format&fit=crop&q=80&w=800'
-  }
-];
-
-const DEFAULT_AWARDS: AwardItem[] = [
-  {
-    id: '1',
-    title: 'Juara 1 Web Development Competition',
-    issuer: 'National Tech Summit',
-    year: '2026',
-    description: 'Pemenang kategori inovasi sistem web adaptif dan arsitektur cloud.',
-    imageUrl: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&q=80&w=800'
-  }
-];
-
-const DEFAULT_CONTACTS: ContactAccount[] = [
-  { id: '1', platform: 'GitHub', label: 'github.com/qiqifahreza', url: 'https://github.com/qiqifahreza' },
-  { id: '2', platform: 'LinkedIn', label: 'linkedin.com/in/qiqifahreza', url: 'https://linkedin.com/in/qiqifahreza' },
-  { id: '3', platform: 'Email', label: 'qiqifahreza@example.com', url: 'mailto:qiqifahreza@example.com' },
-  { id: '4', platform: 'Instagram', label: '@qiqifahreza', url: 'https://instagram.com' }
-];
+const DEFAULT_PROJECTS: ProjectItem[] = [];
+const DEFAULT_CERTIFICATES: CertificateItem[] = [];
+const DEFAULT_AWARDS: AwardItem[] = [];
+const DEFAULT_CONTACTS: ContactAccount[] = [];
 
 const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
-  title: 'Mari Terhubung',
-  description: 'Punya ide menarik atau proyek yang ingin didiskusikan? Kirim pesan langsung ke saya.'
+  title: '',
+  description: ''
 };
 
 const DEFAULT_ADMIN_CREDENTIALS: AdminCredentials = {
@@ -317,7 +230,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [general, setGeneral] = useState<GeneralSettings>(() => {
     try {
       const saved = localStorage.getItem('portfolio_general');
-      return saved ? { ...DEFAULT_GENERAL, ...JSON.parse(saved) } : DEFAULT_GENERAL;
+      return saved ? JSON.parse(saved) : DEFAULT_GENERAL;
     } catch {
       return DEFAULT_GENERAL;
     }
@@ -326,6 +239,8 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (general.webTitle) {
       document.title = general.webTitle;
+    } else {
+      document.title = 'Portfolio';
     }
 
     if (general.faviconUrl) {
@@ -344,16 +259,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [personal, setPersonal] = useState<PersonalInfo>(() => {
     try {
       const saved = localStorage.getItem('portfolio_personal');
-      if (!saved) return DEFAULT_PERSONAL;
-      const parsed = JSON.parse(saved);
-      return {
-        ...DEFAULT_PERSONAL,
-        ...parsed,
-        aboutImageUrl: parsed?.aboutImageUrl || DEFAULT_PERSONAL.aboutImageUrl,
-        skills: Array.isArray(parsed?.skills) && parsed.skills.length > 0 ? parsed.skills : DEFAULT_PERSONAL.skills,
-        education: Array.isArray(parsed?.education) && parsed.education.length > 0 ? parsed.education : DEFAULT_PERSONAL.education,
-        experience: Array.isArray(parsed?.experience) && parsed.experience.length > 0 ? parsed.experience : DEFAULT_PERSONAL.experience,
-      };
+      return saved ? JSON.parse(saved) : DEFAULT_PERSONAL;
     } catch {
       return DEFAULT_PERSONAL;
     }
@@ -362,8 +268,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [projects, setProjects] = useState<ProjectItem[]>(() => {
     try {
       const saved = localStorage.getItem('portfolio_projects');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_PROJECTS;
+      return saved ? JSON.parse(saved) : DEFAULT_PROJECTS;
     } catch {
       return DEFAULT_PROJECTS;
     }
@@ -372,8 +277,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [certificates, setCertificates] = useState<CertificateItem[]>(() => {
     try {
       const saved = localStorage.getItem('portfolio_certificates');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_CERTIFICATES;
+      return saved ? JSON.parse(saved) : DEFAULT_CERTIFICATES;
     } catch {
       return DEFAULT_CERTIFICATES;
     }
@@ -382,8 +286,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [awards, setAwards] = useState<AwardItem[]>(() => {
     try {
       const saved = localStorage.getItem('portfolio_awards');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_AWARDS;
+      return saved ? JSON.parse(saved) : DEFAULT_AWARDS;
     } catch {
       return DEFAULT_AWARDS;
     }
@@ -392,8 +295,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [contacts, setContacts] = useState<ContactAccount[]>(() => {
     try {
       const saved = localStorage.getItem('portfolio_contacts');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_CONTACTS;
+      return saved ? JSON.parse(saved) : DEFAULT_CONTACTS;
     } catch {
       return DEFAULT_CONTACTS;
     }
@@ -402,7 +304,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [contactSettings, setContactSettings] = useState<ContactSettings>(() => {
     try {
       const saved = localStorage.getItem('portfolio_contact_settings');
-      return saved ? { ...DEFAULT_CONTACT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_CONTACT_SETTINGS;
+      return saved ? JSON.parse(saved) : DEFAULT_CONTACT_SETTINGS;
     } catch {
       return DEFAULT_CONTACT_SETTINGS;
     }
@@ -411,7 +313,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [adminCredentials, setAdminCredentials] = useState<AdminCredentials>(() => {
     try {
       const saved = localStorage.getItem('portfolio_admin_credentials');
-      return saved ? { ...DEFAULT_ADMIN_CREDENTIALS, ...JSON.parse(saved) } : DEFAULT_ADMIN_CREDENTIALS;
+      return saved ? JSON.parse(saved) : DEFAULT_ADMIN_CREDENTIALS;
     } catch {
       return DEFAULT_ADMIN_CREDENTIALS;
     }
@@ -420,7 +322,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // ================= LOAD DATA DARI TABEL-TABEL SUPABASE =================
+  // Load dari database Supabase
   useEffect(() => {
     let ignore = false;
 
@@ -457,53 +359,50 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
 
         if (ignore) return;
 
-        // 1. General Settings
         if (genRes.data) {
           const g = genRes.data;
-          setGeneral((prev) => ({
-            ...prev,
-            webTitle: g.web_title ?? prev.webTitle,
-            faviconUrl: g.favicon_url ?? prev.faviconUrl,
-            logoText: g.logo_text ?? prev.logoText,
-            navbarLogoUrl: g.navbar_logo_url ?? prev.navbarLogoUrl,
-            badgeText: g.badge_text ?? prev.badgeText,
-            heroKatakana: g.hero_katakana ?? prev.heroKatakana,
-            heroBigText: g.hero_big_text ?? prev.heroBigText,
-            heroSignature: g.hero_signature ?? prev.heroSignature,
-            heroImageUrl: g.hero_image_url ?? prev.heroImageUrl,
-            currentStatusTitle: g.current_status_title ?? prev.currentStatusTitle,
-            currentStatusText: g.current_status_text ?? prev.currentStatusText,
-            newsLabel: g.news_label ?? prev.newsLabel,
-            heroIntro: g.hero_intro ?? prev.heroIntro,
-            heroDescription: g.hero_description ?? prev.heroDescription,
-            heroQuote: g.hero_quote ?? prev.heroQuote,
-            heroQuoteAuthor: g.hero_quote_author ?? prev.heroQuoteAuthor,
-            jikosoukaiTitle: g.jikosoukai_title ?? prev.jikosoukaiTitle,
-            heroMetaText: g.hero_meta_text ?? prev.heroMetaText,
-          }));
+          setGeneral({
+            webTitle: g.web_title ?? '',
+            faviconUrl: g.favicon_url ?? '',
+            logoText: g.logo_text ?? '',
+            navbarLogoUrl: g.navbar_logo_url ?? '',
+            badgeText: g.badge_text ?? '',
+            heroKatakana: g.hero_katakana ?? '',
+            heroBigText: g.hero_big_text ?? '',
+            heroSignature: g.hero_signature ?? '',
+            heroImageUrl: g.hero_image_url ?? '',
+            currentStatusTitle: g.current_status_title ?? '',
+            currentStatusText: g.current_status_text ?? '',
+            newsLabel: g.news_label ?? '',
+            heroIntro: g.hero_intro ?? '',
+            heroDescription: g.hero_description ?? '',
+            heroQuote: g.hero_quote ?? '',
+            heroQuoteAuthor: g.hero_quote_author ?? '',
+            jikosoukaiTitle: g.jikosoukai_title ?? '',
+            heroMetaText: g.hero_meta_text ?? '',
+          });
           if (g.is_dark !== undefined) setIsDark(g.is_dark);
           if (g.primary_color) setPrimaryColor(g.primary_color);
           if (g.secondary_color) setSecondaryColor(g.secondary_color);
         }
 
-        // 2. Personal Info
         if (perRes.data) {
           const p = perRes.data;
-          setPersonal((prev) => ({
-            ...prev,
-            name: p.name ?? prev.name,
-            nickname: p.nickname ?? prev.nickname,
-            role: p.role ?? prev.role,
-            greeting: p.greeting ?? prev.greeting,
-            bio: p.bio ?? prev.bio,
-            aboutImageUrl: p.about_image_url ?? prev.aboutImageUrl,
-            cvUrl: p.cv_url ?? prev.cvUrl,
-            skills: Array.isArray(p.skills) && p.skills.length > 0 ? p.skills : prev.skills,
-          }));
+          setPersonal({
+            name: p.name ?? '',
+            nickname: p.nickname ?? '',
+            role: p.role ?? '',
+            greeting: p.greeting ?? '',
+            bio: p.bio ?? '',
+            aboutImageUrl: p.about_image_url ?? '',
+            cvUrl: p.cv_url ?? '',
+            skills: Array.isArray(p.skills) ? p.skills : [],
+            education: [],
+            experience: [],
+          });
         }
 
-        // 3. Education List
-        if (eduRes.data && eduRes.data.length > 0) {
+        if (eduRes.data) {
           setPersonal((prev) => ({
             ...prev,
             education: eduRes.data.map((e: { id: string; institution: string; major: string; sub_detail?: string; period?: string }) => ({
@@ -516,8 +415,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }));
         }
 
-        // 4. Experience List
-        if (expRes.data && expRes.data.length > 0) {
+        if (expRes.data) {
           setPersonal((prev) => ({
             ...prev,
             experience: expRes.data.map((x: { id: string; company: string; role: string; sub_detail?: string; period?: string }) => ({
@@ -530,8 +428,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }));
         }
 
-        // 5. Projects
-        if (projRes.data && projRes.data.length > 0) {
+        if (projRes.data) {
           setProjects(
             projRes.data.map((pr: { id: string; title: string; category?: string; description?: string; tags?: string[]; github?: string; demo?: string; image_url?: string }) => ({
               id: pr.id,
@@ -539,15 +436,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
               category: pr.category ?? '',
               description: pr.description ?? '',
               tags: Array.isArray(pr.tags) ? pr.tags : [],
-              github: pr.github ?? '#',
-              demo: pr.demo ?? '#',
+              github: pr.github ?? '',
+              demo: pr.demo ?? '',
               imageUrl: pr.image_url ?? '',
             }))
           );
         }
 
-        // 6. Certificates
-        if (certRes.data && certRes.data.length > 0) {
+        if (certRes.data) {
           setCertificates(
             certRes.data.map((c: { id: string; title: string; issuer?: string; year?: string; credential_id?: string; credential_url?: string; image_url?: string }) => ({
               id: c.id,
@@ -561,8 +457,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           );
         }
 
-        // 7. Awards
-        if (awardRes.data && awardRes.data.length > 0) {
+        if (awardRes.data) {
           setAwards(
             awardRes.data.map((a: { id: string; title: string; issuer?: string; year?: string; description?: string; image_url?: string }) => ({
               id: a.id,
@@ -575,8 +470,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           );
         }
 
-        // 8. Contacts
-        if (contRes.data && contRes.data.length > 0) {
+        if (contRes.data) {
           setContacts(
             contRes.data.map((ct: { id: string; platform: string; label: string; url: string }) => ({
               id: ct.id,
@@ -587,15 +481,13 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           );
         }
 
-        // 9. Contact Settings
         if (cSetRes.data) {
           setContactSettings({
-            title: cSetRes.data.title ?? DEFAULT_CONTACT_SETTINGS.title,
-            description: cSetRes.data.description ?? DEFAULT_CONTACT_SETTINGS.description,
+            title: cSetRes.data.title ?? '',
+            description: cSetRes.data.description ?? '',
           });
         }
 
-        // 10. Admin Credentials
         if (admRes.data) {
           setAdminCredentials({
             username: admRes.data.username ?? DEFAULT_ADMIN_CREDENTIALS.username,
@@ -603,7 +495,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           });
         }
       } catch (err) {
-        console.error('Gagal mengambil data tabel Supabase:', err);
+        console.error('Error load Supabase:', err);
       } finally {
         if (!ignore) setIsRemoteLoaded(true);
       }
@@ -616,14 +508,13 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // ================= SIMPAN KE SEMUA TABEL SUPABASE =================
+  // Simpan ke database Supabase
   const savePortfolio = async () => {
     if (!supabase || !isRemoteLoaded) return;
     setIsSaving(true);
 
     try {
       await Promise.all([
-        // 1. General Settings Table
         supabase.from('general_settings').upsert({
           id: 'default',
           web_title: general.webTitle,
@@ -650,7 +541,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           updated_at: new Date().toISOString(),
         }),
 
-        // 2. Personal Info Table
         supabase.from('personal_info').upsert({
           id: 'default',
           name: personal.name,
@@ -664,7 +554,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           updated_at: new Date().toISOString(),
         }),
 
-        // 3. Education Table (Hapus lalu masukkan list terbaru)
         (async () => {
           await supabase.from('education').delete().neq('id', '');
           if (personal.education && personal.education.length > 0) {
@@ -680,7 +569,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 4. Experience Table
         (async () => {
           await supabase.from('experience').delete().neq('id', '');
           if (personal.experience && personal.experience.length > 0) {
@@ -696,7 +584,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 5. Projects Table
         (async () => {
           await supabase.from('projects').delete().neq('id', '');
           if (projects && projects.length > 0) {
@@ -715,7 +602,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 6. Certificates Table
         (async () => {
           await supabase.from('certificates').delete().neq('id', '');
           if (certificates && certificates.length > 0) {
@@ -733,7 +619,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 7. Awards Table
         (async () => {
           await supabase.from('awards').delete().neq('id', '');
           if (awards && awards.length > 0) {
@@ -750,7 +635,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 8. Contacts Table
         (async () => {
           await supabase.from('contacts').delete().neq('id', '');
           if (contacts && contacts.length > 0) {
@@ -765,7 +649,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           }
         })(),
 
-        // 9. Contact Settings Table
         supabase.from('contact_settings').upsert({
           id: 'default',
           title: contactSettings.title,
@@ -773,7 +656,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           updated_at: new Date().toISOString(),
         }),
 
-        // 10. Admin Credentials Table
         supabase.from('admin_credentials').upsert({
           id: 'default',
           username: adminCredentials.username,
@@ -782,13 +664,13 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         }),
       ]);
     } catch (error) {
-      console.error('Error saat menyimpan ke tabel Supabase:', error);
+      console.error('Error simpan Supabase:', error);
     } finally {
       setIsSaving(false);
     }
   };
 
-  // LocalStorage Sync (sebagai cadangan offline)
+  // LocalStorage sync
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
