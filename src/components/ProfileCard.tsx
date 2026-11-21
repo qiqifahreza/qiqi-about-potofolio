@@ -1,6 +1,5 @@
 'use client';
 
-// Ganti baris 3 menjadi:
 import { memo, useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Mail01Icon } from '@hugeicons/core-free-icons';

@@ -28,7 +28,7 @@ export default function LogoLoop({
 }: LogoLoopProps) {
   if (!logos || logos.length === 0) return null;
 
-  // Duplikasi logo 3x agar perputaran marquee berjalan mulus tanpa jeda kosong
+  // Three copies keep the marquee continuous.
   const repeatedLogos = [...logos, ...logos, ...logos];
 
   const animationName = direction === 'left' ? 'marquee-left' : 'marquee-right';
@@ -98,7 +98,6 @@ export default function LogoLoop({
         })}
       </div>
 
-      {/* Style Animasi Marquee Murni CSS */}
       <style>{`
         @keyframes marquee-left {
           0% { transform: translate3d(0, 0, 0); }

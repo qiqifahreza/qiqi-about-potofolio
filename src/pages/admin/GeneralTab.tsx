@@ -3,7 +3,6 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import ImageInputControl from '../../components/admin/ImageInputControl';
 
 export default function GeneralTab({ onSave }: { onSave: () => void }) {
-  // Semua hook ditaruh di dalam komponen secara benar
   const { 
     primaryColor, 
     secondaryColor, 
@@ -25,7 +24,6 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         <p className="text-xs text-slate-400">Atur foto utama Hero di Beranda, teks, logo loop, identitas, dan logo navbar.</p>
       </div>
 
-      {/* 1. Identitas Website & Navbar */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">Identitas Website & Tab Browser</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -68,7 +66,6 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         </div>
       </div>
 
-      {/* 3. Hero Photo Beranda */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">Foto Model Khusus Beranda (Hero Cutout)</h3>
         <ImageInputControl
@@ -79,7 +76,6 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         />
       </div>
 
-      {/* 4. Hero Magazine Details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1">Badge Teks Hero (Kiri Atas):</label>
@@ -195,7 +191,6 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         </div>
       </div>
 
-      {/* 5. Pengaturan Logo Loop Marquee */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
         <div className="flex items-center justify-between">
           <div>

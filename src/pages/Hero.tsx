@@ -11,7 +11,7 @@ const smoothstep = (edge0: number, edge1: number, x: number): number => {
   const t = clamp((x - edge0) / (edge1 - edge0 || 1e-6), 0, 1);
   return t * t * (3 - 2 * t);
 };
-// Fungsi murni (pure) di luar komponen agar lolos aturan Oxlint React Compiler
+// Keep this helper outside the component for the React Compiler.
 function buildTypeLines(text: string) {
   let cursor = 0;
   return text.split('\n').map((line) => {
@@ -22,14 +22,13 @@ function buildTypeLines(text: string) {
         idx: cursor++,
       }));
       if (wordIdx < words.length - 1) {
-        cursor++; // hitung jarak spasi antar kata
+        cursor++; // Count the space between words.
       }
       return charItems;
     });
   });
 }
 
-// Komponen Teks Mengetik Berbasis Scroll (Kata utuh, tidak pernah terpotong di tengah kata)
 function TypeChars({
   text,
   start,
@@ -262,10 +261,8 @@ export default function Hero() {
           ref={stageRef}
           className="sticky top-0 w-full flex items-center justify-center pt-20 pb-4 sm:pb-8 px-2.5 sm:px-6 overflow-hidden z-10"
         >
-          {/* Container Pembungkus Poster Utama */}
           <div className="relative w-full max-w-[1380px] h-[85vh] min-h-[600px] sm:min-h-[640px] max-h-[820px]">
             
-            {/* ================= LAYER CLIPPING POSTER UTAMA ================= */}
             <div
               ref={frameRef}
               className={`absolute inset-0 overflow-hidden shadow-2xl transition-colors ${
@@ -282,10 +279,8 @@ export default function Hero() {
                 ref={innerScaleRef}
                 className="w-full h-full p-4 sm:p-8 lg:p-10 flex flex-col justify-between origin-center [will-change:transform]"
               >
-                {/* ================= 1. TOP SECTION (RESPONSIF MOBILE & DESKTOP) ================= */}
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-2.5 sm:gap-4 z-30">
                   
-                  {/* Top-Left: Badge & Jikosoukai */}
                   <div className="flex items-start gap-3 max-w-full sm:max-w-md">
                     <div
                       ref={(el) => { boxNodesRef.current[0] = el; }}
@@ -317,7 +312,6 @@ export default function Hero() {
                     </div>
                   </div>
 
-                  {/* Top-Right: LogoLoop & Meta (Rapi sejajar di HP, rata kanan di Desktop) */}
                   <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto sm:max-w-[260px] gap-2 pt-1.5 sm:pt-0 border-t sm:border-t-0 border-white/10 dark:border-white/10 border-black/10">
                     <div
                       ref={(el) => { boxNodesRef.current[1] = el; }}
@@ -348,10 +342,8 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* ================= 2. CENTER HERO ================= */}
                 <div className="relative flex-1 flex items-center justify-center my-auto min-h-[210px] sm:min-h-[300px]">
                   
-                  {/* Katakana Jepang */}
                   {general.heroKatakana && (
                     <div
                       style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
@@ -361,7 +353,6 @@ export default function Hero() {
                     </div>
                   )}
 
-                  {/* Huruf R I F K I Raksasa */}
                   {bigText && (
                     <div className="absolute inset-0 flex items-center justify-between w-full pointer-events-none z-10">
                       <h1
@@ -393,10 +384,8 @@ export default function Hero() {
                     </div>
                   )}
 
-                  {/* Foto Cutout Model Tengah */}
                   {general.heroImageUrl && (
                     <div className="relative z-20 h-[34vh] sm:h-[52vh] lg:h-[58vh] flex items-end justify-center pointer-events-none translate-y-2 sm:translate-y-8 lg:translate-y-12">
-                      {/* FOTO CUTOUT MODEL TENGAH DENGAN EFEK HALFTONE REVEAL TRANSPARAN */}
 {general.heroImageUrl && (
   <div className="relative z-20 w-[240px] sm:w-[320px] lg:w-[380px] h-[34vh] sm:h-[52vh] lg:h-[58vh] flex items-end justify-center pointer-events-auto translate-y-2 sm:translate-y-8 lg:translate-y-12">
     <HalftoneReveal
@@ -430,7 +419,6 @@ export default function Hero() {
                     </div>
                   )}
 
-                  {/* Tanda Tangan Sambung */}
                   {general.heroSignature && (
                     <div
                       style={{ fontFamily: "'Alex Brush', cursive" }}
@@ -443,7 +431,6 @@ export default function Hero() {
                   )}
                 </div>
 
-                {/* ================= 3. BOTTOM SECTION (RESPONSIF MOBILE & DESKTOP) ================= */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-4 z-30 pt-2 sm:pt-4 relative">
                   <div className="max-w-full sm:max-w-sm">
                     {general.currentStatusTitle && (
@@ -486,7 +473,6 @@ export default function Hero() {
                     )}
                   </div>
 
-                  {/* Indikator SCROLL (Hanya di Layar Tablet/Desktop agar HP tetap lega) */}
                   <div
                     ref={(el) => { boxNodesRef.current[2] = el; }}
                     style={{ opacity: 0 }}
@@ -501,7 +487,6 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* ================= GARIS BORDER KACA ================= */}
             <div
               ref={borderRef}
               aria-hidden="true"
@@ -521,7 +506,6 @@ export default function Hero() {
 
           </div>
 
-          {/* Petunjuk Scroll */}
           <div
             ref={hintRef}
             className={`absolute bottom-4 sm:bottom-5 inset-x-0 text-center text-[11px] sm:text-xs font-mono tracking-widest uppercase pointer-events-none ${

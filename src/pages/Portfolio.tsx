@@ -45,7 +45,6 @@ export default function Portfolio() {
     'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=800',
   ];
 
-  // ================= PAGINATION: PROJECTS =================
   const totalProjPages = Math.max(1, Math.ceil((projects?.length || 0) / ITEMS_PER_PAGE));
   const safeProjPage = Math.min(projPage, totalProjPages);
   const pagedProjects = (projects || []).slice(
@@ -62,7 +61,6 @@ export default function Portfolio() {
         }))
       : [{ title: 'Belum Ada Projek', description: 'Tambahkan lewat Admin' }];
 
-  // ================= PAGINATION: CERTIFICATES =================
   const totalCertPages = Math.max(1, Math.ceil((certificates?.length || 0) / ITEMS_PER_PAGE));
   const safeCertPage = Math.min(certPage, totalCertPages);
   const pagedCerts = (certificates || []).slice(
@@ -79,7 +77,6 @@ export default function Portfolio() {
         }))
       : [{ title: 'Belum Ada Sertifikat', description: 'Tambahkan lewat Admin' }];
 
-  // ================= PAGINATION: AWARDS =================
   const totalAwardPages = Math.max(1, Math.ceil((awards?.length || 0) / ITEMS_PER_PAGE));
   const safeAwardPage = Math.min(awardPage, totalAwardPages);
   const pagedAwards = (awards || []).slice(
@@ -101,7 +98,6 @@ export default function Portfolio() {
   return (
     <section id="projek" className="relative z-10 py-16 sm:py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden select-none">
       
-      {/* ================= WATERMARK ONOMATOPOEIA MANGA (SFX) ================= */}
       <div className="absolute top-10 left-2 pointer-events-none opacity-[0.05] dark:opacity-[0.06] text-7xl sm:text-9xl font-black font-['Noto_Sans_JP',sans-serif] tracking-widest leading-none">
         ゴゴゴゴ
       </div>
@@ -109,7 +105,6 @@ export default function Portfolio() {
         ドドドド
       </div>
 
-      {/* ================= SECTION HEADER GAYA MANGA DOSSIER ================= */}
       <AnimatedContent
         distance={40}
         duration={0.7}
@@ -122,7 +117,6 @@ export default function Portfolio() {
           <span>巻の二 // CHAPTER 02 • THE ARCHIVES</span>
         </div>
 
-        {/* Judul Utama dengan Cap Merah Rahasia (Hanko Stamp) */}
         <div className="relative inline-block">
           <h2 className={`text-3xl sm:text-6xl font-black tracking-tight font-mono uppercase ${themeTitle}`}>
             PORTFOLIO SHOWCASE
@@ -131,13 +125,11 @@ export default function Portfolio() {
             作品集 • 認定証書 • 受賞記録
           </p>
 
-          {/* Stempel Merah Manga (Secret Archive Stamp) */}
           <div className="absolute -top-6 -right-6 sm:-right-12 rotate-12 border-2 border-rose-600 text-rose-600 px-2 py-0.5 rounded text-[10px] sm:text-xs font-mono font-black tracking-widest uppercase opacity-90 shadow-xs pointer-events-none">
             [ 秘 • CLASSIFIED ]
           </div>
         </div>
 
-        {/* Manga Mission Banner (Statistik Komik) */}
         <div className="mt-8 max-w-2xl mx-auto p-4 rounded-xl border-2 border-black dark:border-white bg-white/90 dark:bg-zinc-900/90 shadow-[5px_5px_0px_#000] dark:shadow-[5px_5px_0px_#fff] flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
@@ -158,7 +150,6 @@ export default function Portfolio() {
         </div>
       </AnimatedContent>
 
-      {/* ================= 3 PANEL DOSSIER KOMIK ================= */}
       <AnimatedContent
         distance={60}
         duration={0.85}
@@ -168,12 +159,9 @@ export default function Portfolio() {
         className="w-full grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-8 items-start justify-items-center"
       >
         
-        {/* ================= PANEL 1: PROJECTS ================= */}
         <div className="w-full max-w-[370px] flex flex-col items-center">
-          {/* Manga Dossier Panel Card Wrapper */}
           <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-5 pb-8 relative overflow-hidden transition-all hover:-translate-y-1">
             
-            {/* Header Panel Komik */}
             <div className="flex items-center justify-between pb-3 mb-6 border-b-2 border-black/10 dark:border-white/15 text-[11px] font-mono">
               <span className="font-black flex items-center gap-1.5 uppercase">
                 <Code2 size={14} className="text-teal-500" />
@@ -182,13 +170,11 @@ export default function Portfolio() {
               <span className="font-bold opacity-60">第01分類</span>
             </div>
 
-            {/* Registration Corner Marks (Tanda Potong Komik) */}
             <span className="absolute top-2 left-2 text-[10px] font-mono opacity-30 select-none">⌜</span>
             <span className="absolute top-2 right-2 text-[10px] font-mono opacity-30 select-none">⌝</span>
             <span className="absolute bottom-2 left-2 text-[10px] font-mono opacity-30 select-none">⌞</span>
             <span className="absolute bottom-2 right-2 text-[10px] font-mono opacity-30 select-none">⌟</span>
 
-            {/* Komponen Folder 3D WebGL */}
             <div className="flex justify-center py-4">
               <Folder
                 label="Projects"
@@ -219,7 +205,6 @@ export default function Portfolio() {
               />
             </div>
 
-            {/* Footer Panel dengan Petunjuk Taktil Manga */}
             <div className="mt-4 pt-3 border-t border-dashed border-black/15 dark:border-white/15 flex items-center justify-between text-[10px] font-mono opacity-70">
               <span className="flex items-center gap-1">
                 <FolderOpen size={12} />
@@ -229,7 +214,6 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Pagination Manga Style (Muncul Otomatis jika Proyek > 3) */}
           {(projects?.length || 0) > ITEMS_PER_PAGE && (
             <div className="mt-5 inline-flex items-center gap-3 px-4 py-1.5 rounded-lg border-2 border-black dark:border-white bg-white dark:bg-zinc-900 shadow-[4px_4px_0px_#000] dark:shadow-[4px_4px_0px_#fff] text-xs font-mono">
               <button
@@ -257,7 +241,6 @@ export default function Portfolio() {
           )}
         </div>
 
-        {/* ================= PANEL 2: CERTIFICATES ================= */}
         <div className="w-full max-w-[370px] flex flex-col items-center">
           <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-5 pb-8 relative overflow-hidden transition-all hover:-translate-y-1">
             
@@ -338,7 +321,6 @@ export default function Portfolio() {
           )}
         </div>
 
-        {/* ================= PANEL 3: AWARDS ================= */}
         <div className="w-full max-w-[370px] flex flex-col items-center">
           <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-5 pb-8 relative overflow-hidden transition-all hover:-translate-y-1">
             
@@ -421,7 +403,6 @@ export default function Portfolio() {
 
       </AnimatedContent>
 
-      {/* ================= MODAL DETAIL PROJEK GAYA MANGA ================= */}
       {selectedProject && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in"
@@ -502,7 +483,6 @@ export default function Portfolio() {
         </div>
       )}
 
-      {/* ================= MODAL PRATINJAU SERTIFIKAT ================= */}
       {selectedCert && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
@@ -536,7 +516,6 @@ export default function Portfolio() {
         </div>
       )}
 
-      {/* ================= MODAL PRATINJAU AWARD ================= */}
       {selectedAward && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"

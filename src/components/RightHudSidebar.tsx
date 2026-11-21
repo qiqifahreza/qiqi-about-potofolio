@@ -3,7 +3,7 @@ import { ArrowUp, Mail, Globe, Phone } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { GithubIcon, LinkedinIcon } from './Icons';
 
-// SVG Instagram mandiri (bebas error dari lucide-react)
+// Local Instagram icon; lucide-react does not include this mark.
 function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -17,7 +17,6 @@ function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
 export default function RightHudSidebar() {
   const { isDark, contacts } = usePortfolio();
 
-  // 1. Real-Time Digital Clock
   const [timeStr, setTimeStr] = useState('');
   useEffect(() => {
     const updateClock = () => {
@@ -36,7 +35,6 @@ export default function RightHudSidebar() {
     return () => clearInterval(interval);
   }, []);
 
-  // 2. Scroll Percentage Gauge (0% - 100%)
   const [scrollPercent, setScrollPercent] = useState(0);
   useEffect(() => {
     const onScroll = () => {
@@ -71,7 +69,6 @@ export default function RightHudSidebar() {
       aria-label="Manga HUD Telemetry"
       className="fixed right-4 xl:right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center justify-between h-[68vh] max-h-[580px] select-none pointer-events-auto"
     >
-      {/* ATAS: LIVE CLOCK & LOCATION */}
       <div className="flex flex-col items-center gap-1.5 text-center">
         <span
           className={`px-2 py-0.5 rounded text-[9px] font-mono font-black uppercase tracking-widest border ${
@@ -93,7 +90,6 @@ export default function RightHudSidebar() {
         </div>
       </div>
 
-      {/* TENGAH: VERTICAL SCROLL GAUGE */}
       <div className="flex flex-col items-center gap-2 my-auto">
         <span className="text-[9px] font-['Noto_Sans_JP',sans-serif] font-bold opacity-50 tracking-widest">
           進行度
@@ -117,7 +113,6 @@ export default function RightHudSidebar() {
         </span>
       </div>
 
-      {/* BAWAH: QUICK SOCIALS DARI ADMIN & BACK TO TOP */}
       <div className="flex flex-col items-center gap-3">
         <div className="flex flex-col items-center gap-2">
           {contacts && contacts.length > 0 ? (

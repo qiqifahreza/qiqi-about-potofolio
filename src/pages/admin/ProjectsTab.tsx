@@ -74,7 +74,6 @@ export default function ProjectsTab({ onSave }: { onSave: () => void }) {
         </button>
       </div>
 
-      {/* List Projects */}
       <div className="space-y-3">
         {projects.map(item => (
           <div key={item.id} className="p-4 rounded-xl glass-panel flex items-center justify-between gap-3 border border-white/10">

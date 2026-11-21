@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-// ================= TIPE DATA =================
 export interface GeneralSettings {
   webTitle: string;
   faviconUrl: string;
@@ -99,7 +98,6 @@ export interface ContactSettings {
   description: string;
 }
 
-// ================= DATA DEFAULT: 100% KOSONG DARI AWAL =================
 const DEFAULT_GENERAL: GeneralSettings = {
   webTitle: '',
   faviconUrl: '',
@@ -142,7 +140,6 @@ const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
   description: ''
 };
 
-// ================= CONTEXT INTERFACE =================
 export interface PortfolioContextType {
   isDark: boolean;
   toggleTheme: () => void;
@@ -219,7 +216,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Safe load techLogos (filter item kosong)
+  // Ignore malformed saved values and use the defaults.
   const [techLogos, setTechLogos] = useState<TechLogoItem[]>(() => {
     try {
       const saved = localStorage.getItem('portfolio_tech_logos');
@@ -326,7 +323,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // ================= LOAD DARI DATABASE SUPABASE (TERMASUK TECH_LOGOS) =================
   useEffect(() => {
     let ignore = false;
 
@@ -514,7 +510,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // ================= SIMPAN KE DATABASE SUPABASE (TERMASUK TECH_LOGOS) =================
   const savePortfolio = async () => {
     if (!supabase) throw new Error('Supabase is not configured.');
     if (!isRemoteLoaded) throw new Error('Portfolio data is still loading from Supabase.');
@@ -691,7 +686,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // ================= SINKRONISASI LOCALSTORAGE (TERMASUK TECH_LOGOS) =================
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -706,7 +700,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('portfolio_contact_settings', JSON.stringify(contactSettings));
       localStorage.setItem('portfolio_tech_logos', JSON.stringify(techLogos));
     } catch {
-      // safe ignore
+      // Storage may be unavailable; keep the in-memory state.
     }
 
     if (isDark) {

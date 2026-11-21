@@ -10,7 +10,6 @@ export default function Contacts() {
   return (
     <section id="contact" className="relative z-10 py-16 sm:py-24 px-4 sm:px-8 max-w-5xl mx-auto overflow-hidden select-none">
       
-      {/* ================= WATERMARK ONOMATOPOEIA MANGA (SFX) ================= */}
       <div className="absolute top-10 right-4 pointer-events-none opacity-[0.05] dark:opacity-[0.06] text-7xl sm:text-9xl font-black font-['Noto_Sans_JP',sans-serif] tracking-widest leading-none">
         バァァン
       </div>
@@ -18,7 +17,6 @@ export default function Contacts() {
         ピピッ
       </div>
 
-      {/* ================= HEADER BAB MANGA ================= */}
       <AnimatedContent
         distance={40}
         duration={0.7}
@@ -39,14 +37,12 @@ export default function Contacts() {
             通信確立 • 共闘要請 • 意見交信
           </p>
 
-          {/* Stempel Darurat Manga (Urgent Dispatch Stamp) */}
           <div className="absolute -top-6 -right-6 sm:-right-10 rotate-12 border-2 border-rose-600 text-rose-600 px-2.5 py-0.5 rounded text-[10px] sm:text-xs font-mono font-black tracking-widest uppercase opacity-90 shadow-xs pointer-events-none">
             [ 急 • URGENT ]
           </div>
         </div>
       </AnimatedContent>
 
-      {/* ================= MANGA TRANSMISSION PANEL ================= */}
       <AnimatedContent
         distance={60}
         duration={0.85}
@@ -56,13 +52,11 @@ export default function Contacts() {
       >
         <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[10px_10px_0px_#000] dark:shadow-[10px_10px_0px_#fff] p-6 sm:p-12 relative overflow-hidden">
           
-          {/* Registration Crop Marks */}
           <span className="absolute top-2 left-2 text-[10px] font-mono opacity-30 select-none">⌜</span>
           <span className="absolute top-2 right-2 text-[10px] font-mono opacity-30 select-none">⌝</span>
           <span className="absolute bottom-2 left-2 text-[10px] font-mono opacity-30 select-none">⌞</span>
           <span className="absolute bottom-2 right-2 text-[10px] font-mono opacity-30 select-none">⌟</span>
 
-          {/* Strip Status Terminal */}
           <div className="flex items-center justify-between pb-3 mb-8 border-b-2 border-black/10 dark:border-white/15 text-xs font-mono">
             <span className="font-black flex items-center gap-2 uppercase">
               <Terminal size={15} className="text-emerald-500" />
@@ -117,7 +111,6 @@ export default function Contacts() {
               />
             </div>
 
-            {/* Tombol Kirim Manga Button */}
             <button 
               type="submit" 
               className="manga-btn w-full py-4 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black flex items-center justify-center gap-2 cursor-pointer mt-2"
@@ -127,7 +120,6 @@ export default function Contacts() {
             </button>
           </form>
 
-          {/* Saluran Frekuensi Resmi / Kontak Sosial Media */}
           {contacts && contacts.length > 0 && (
             <div className="mt-12 pt-8 border-t-2 border-black/10 dark:border-white/10">
               <div className="flex items-center gap-2 mb-4">

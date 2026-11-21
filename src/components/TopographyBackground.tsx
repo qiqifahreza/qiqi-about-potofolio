@@ -560,7 +560,7 @@ const TopographyBackgroundContent = React.forwardRef<HTMLDivElement, TopographyB
       return () => controls.stop();
     }, [reduce, rise]);
 
-    // Listener interaktif global: kursor diikuti di mana pun pengguna bergerak & mengklik
+    // Track pointer movement across the viewport.
     React.useEffect(() => {
       if (!interactive || reduce) return;
 

@@ -1,13 +1,9 @@
--- ====================================================================
--- BLUEPRINT SKEMA DATABASE PORTOFOLIO (SUPABASE)
--- Jalankan seluruh file ini di Supabase SQL Editor.
--- Migrasi ini mempertahankan isi tabel, kecuali kolom yang tidak lagi dipakai:
--- current_status_text (dipindah ke hero_description), news_label, dan skills.
--- Sebelum perubahan, user admin harus diberi app_metadata {"role":"admin"}
--- melalui Supabase Dashboard / server tepercaya.
--- ====================================================================
+-- Portfolio schema for Supabase.
+-- Run this file in the Supabase SQL Editor.
+-- Existing data is preserved; only obsolete columns are removed:
+-- current_status_text (moved to hero_description), news_label, and skills.
+-- Set app_metadata.role to "admin" through a trusted server or the Supabase Dashboard first.
 
--- 1. Tabel General Settings (Beranda, Tema, Favicon)
 create table if not exists public.general_settings (
   id text primary key default 'default',
   web_title text default '',
@@ -32,7 +28,6 @@ create table if not exists public.general_settings (
   updated_at timestamptz default now()
 );
 
--- 2. Tabel Personal Info (Data Diri, Profil, CV)
 create table if not exists public.personal_info (
   id text primary key default 'default',
   name text default '',
@@ -45,7 +40,6 @@ create table if not exists public.personal_info (
   updated_at timestamptz default now()
 );
 
--- 3. Tabel Riwayat Pendidikan (Education)
 create table if not exists public.education (
   id text primary key,
   institution text not null,
@@ -55,7 +49,6 @@ create table if not exists public.education (
   created_at timestamptz default now()
 );
 
--- 4. Tabel Pengalaman (Experience)
 create table if not exists public.experience (
   id text primary key,
   company text not null,
@@ -65,7 +58,6 @@ create table if not exists public.experience (
   created_at timestamptz default now()
 );
 
--- 5. Tabel Dokumentasi Projek (Projects)
 create table if not exists public.projects (
   id text primary key,
   title text not null,
@@ -78,7 +70,6 @@ create table if not exists public.projects (
   created_at timestamptz default now()
 );
 
--- 6. Tabel Sertifikat (Certificates)
 create table if not exists public.certificates (
   id text primary key,
   title text not null,
@@ -90,7 +81,6 @@ create table if not exists public.certificates (
   created_at timestamptz default now()
 );
 
--- 7. Tabel Penghargaan (Awards)
 create table if not exists public.awards (
   id text primary key,
   title text not null,
@@ -101,7 +91,6 @@ create table if not exists public.awards (
   created_at timestamptz default now()
 );
 
--- 8. Tabel Akun Kontak / Sosmed (Contacts)
 create table if not exists public.contacts (
   id text primary key,
   platform text not null,
@@ -110,7 +99,6 @@ create table if not exists public.contacts (
   created_at timestamptz default now()
 );
 
--- 9. Tabel Pengaturan Teks Kontak
 create table if not exists public.contact_settings (
   id text primary key default 'default',
   title text default '',
@@ -118,7 +106,6 @@ create table if not exists public.contact_settings (
   updated_at timestamptz default now()
 );
 
--- Buat tabel tech_logos untuk menyimpan logo di LogoLoop
 create table if not exists public.tech_logos (
   id text primary key,
   title text not null,
@@ -128,7 +115,7 @@ create table if not exists public.tech_logos (
   created_at timestamptz default now()
 );
 
--- Migrasi aman untuk instalasi lama: pertahankan deskripsi status yang lama.
+-- Preserve the old status description before removing its column.
 alter table public.general_settings
   add column if not exists hero_description text default '';
 
@@ -157,10 +144,9 @@ alter table public.general_settings
 alter table public.personal_info
   drop column if exists skills;
 
--- Hapus tabel lama yang menyimpan password admin plaintext.
+-- Remove the legacy table that stored plaintext admin passwords.
 drop table if exists public.admin_credentials;
 
--- AKTIFKAN ROW LEVEL SECURITY (RLS)
 alter table public.general_settings enable row level security;
 alter table public.personal_info enable row level security;
 alter table public.education enable row level security;
@@ -172,7 +158,7 @@ alter table public.contacts enable row level security;
 alter table public.contact_settings enable row level security;
 alter table public.tech_logos enable row level security;
 
--- Baca konten publik diperbolehkan; semua perubahan dibatasi ke admin.
+-- Anyone can read portfolio content; writes require the admin role.
 grant select on public.general_settings, public.personal_info, public.education,
   public.experience, public.projects, public.certificates, public.awards,
   public.contacts, public.contact_settings, public.tech_logos to anon, authenticated;
@@ -181,7 +167,6 @@ grant insert, update, delete on public.general_settings, public.personal_info,
   public.awards, public.contacts, public.contact_settings, public.tech_logos
   to authenticated;
 
--- KEBIJAKAN AKSES (POLICIES)
 drop policy if exists "Allow all general_settings" on public.general_settings;
 drop policy if exists "Public read general_settings" on public.general_settings;
 drop policy if exists "Admin manage general_settings" on public.general_settings;
@@ -263,7 +248,7 @@ create policy "Admin manage tech_logos" on public.tech_logos for all
   with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 
--- INISIALISASI BARIS PERTAMA (Hanya masuk jika baris belum ada, tidak akan menimpa data yang sudah kamu simpan)
+-- Insert defaults only when the row does not already exist.
 insert into public.general_settings (id, web_title, favicon_url, logo_text, navbar_logo_url, badge_text, hero_katakana, hero_big_text, hero_signature, hero_image_url, current_status_title, hero_intro, hero_description, hero_quote, hero_quote_author, jikosoukai_title, hero_meta_text, primary_color, secondary_color, is_dark)
 values ('default', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '#000000', '#ffffff', true)
 on conflict (id) do nothing;

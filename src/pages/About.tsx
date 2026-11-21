@@ -12,7 +12,6 @@ export default function About() {
   return (
     <section id="tentang" className="relative z-10 py-16 sm:py-24 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden select-none">
       
-      {/* ================= WATERMARK ONOMATOPOEIA MANGA (SFX) ================= */}
       <div className="absolute top-8 right-4 pointer-events-none opacity-[0.05] dark:opacity-[0.06] text-7xl sm:text-9xl font-black font-['Noto_Sans_JP',sans-serif] tracking-widest leading-none">
         シャッ
       </div>
@@ -20,7 +19,6 @@ export default function About() {
         ズバッ
       </div>
 
-      {/* ================= HEADER BAB MANGA ================= */}
       <AnimatedContent
         distance={40}
         duration={0.7}
@@ -41,14 +39,12 @@ export default function About() {
             人物調書 • 経歴目録 • 能力概要
           </p>
 
-          {/* Stempel Karakter Manga (Verified Profile Stamp) */}
           <div className="absolute -top-6 -right-6 sm:-right-10 rotate-12 border-2 border-rose-600 text-rose-600 px-2.5 py-0.5 rounded text-[10px] sm:text-xs font-mono font-black tracking-widest uppercase opacity-90 shadow-xs pointer-events-none">
             [ 認 • VERIFIED ID ]
           </div>
         </div>
       </AnimatedContent>
 
-      {/* ================= MANGA MAIN CHARACTER PANEL (GRID 3 KOLOM) ================= */}
       <AnimatedContent
         distance={60}
         duration={0.85}
@@ -59,13 +55,11 @@ export default function About() {
       >
         <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-6 sm:p-10 relative overflow-hidden">
           
-          {/* Registration Crop Marks */}
           <span className="absolute top-2 left-2 text-[10px] font-mono opacity-30 select-none">⌜</span>
           <span className="absolute top-2 right-2 text-[10px] font-mono opacity-30 select-none">⌝</span>
           <span className="absolute bottom-2 left-2 text-[10px] font-mono opacity-30 select-none">⌞</span>
           <span className="absolute bottom-2 right-2 text-[10px] font-mono opacity-30 select-none">⌟</span>
 
-          {/* Strip Header Panel */}
           <div className="flex items-center justify-between pb-3 mb-8 border-b-2 border-black/10 dark:border-white/15 text-xs font-mono">
             <span className="font-black flex items-center gap-1.5 uppercase">
               <BookOpen size={14} className="text-cyan-500" />
@@ -76,7 +70,6 @@ export default function About() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            {/* Kolom Kiri: Sapaan, Nama Karakter, & Tombol CV */}
             <div className="lg:col-span-4 text-center lg:text-left order-2 lg:order-1">
               <div className="inline-block text-[10px] font-mono font-black uppercase tracking-wider px-2 py-0.5 border border-black dark:border-white mb-2">
                 DESIGNATION //
@@ -109,7 +102,6 @@ export default function About() {
               )}
             </div>
 
-            {/* Kolom Tengah: 3D Hologram ProfileCard */}
             <div className="lg:col-span-4 flex items-center justify-center order-1 lg:order-2">
               <div className="relative">
                 <ProfileCard
@@ -134,7 +126,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Kolom Kanan: Narasi Monolog / Sinopsis Karakter */}
             <div className="lg:col-span-4 text-center lg:text-left order-3">
               <div className="p-4 rounded-xl border-2 border-dashed border-black/20 dark:border-white/20 bg-black/[0.02] dark:bg-white/[0.02] mb-6">
                 <span className="text-[10px] font-mono font-black uppercase tracking-widest block mb-2 opacity-60">
@@ -160,7 +151,6 @@ export default function About() {
         </div>
       </AnimatedContent>
 
-      {/* ================= MANGA PROGRESSION ARCS (EDUCATION & EXPERIENCE) ================= */}
       <AnimatedContent
         distance={60}
         duration={0.85}
@@ -169,7 +159,6 @@ export default function About() {
         className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
       >
         
-        {/* ================= PANEL ARC 1: EDUCATION ================= */}
         <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-6 sm:p-8 relative overflow-hidden">
           <div className="flex items-center justify-between pb-3 mb-6 border-b-2 border-black/10 dark:border-white/15">
             <h2 className={`text-base sm:text-lg font-black font-mono uppercase flex items-center gap-2 ${themeTitle}`}>
@@ -186,7 +175,6 @@ export default function About() {
                   key={edu.id || idx} 
                   className="relative pl-10 pb-6 border-l-2 border-dashed border-black/30 dark:border-white/30 last:border-transparent group"
                 >
-                  {/* Nomor Bab Bulat dengan Hard Shadow */}
                   <div 
                     className={`absolute -left-4 top-0 w-8 h-8 rounded-full border-2 border-black dark:border-white font-mono font-black text-xs flex items-center justify-center shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#fff] ${
                       isDark ? 'bg-white text-black' : 'bg-black text-white'
@@ -218,7 +206,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* ================= PANEL ARC 2: EXPERIENCE ================= */}
         <div className="w-full rounded-2xl border-2 border-black dark:border-white bg-white/80 dark:bg-zinc-900/80 shadow-[8px_8px_0px_#000] dark:shadow-[8px_8px_0px_#fff] p-6 sm:p-8 relative overflow-hidden">
           <div className="flex items-center justify-between pb-3 mb-6 border-b-2 border-black/10 dark:border-white/15">
             <h2 className={`text-base sm:text-lg font-black font-mono uppercase flex items-center gap-2 ${themeTitle}`}>

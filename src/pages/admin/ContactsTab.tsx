@@ -9,7 +9,6 @@ export default function ContactsTab({ onSave }: { onSave: () => void }) {
   const [contactLabel, setContactLabel] = useState('');
   const [contactUrl, setContactUrl] = useState('');
 
-  // Tombol pintas otomatis mengisi nama platform & format url
   const selectQuickPreset = (platform: string, defaultUrl: string, placeholderLabel: string) => {
     setContactPlatform(platform);
     if (!contactUrl) setContactUrl(defaultUrl);
@@ -48,14 +47,12 @@ export default function ContactsTab({ onSave }: { onSave: () => void }) {
         </div>
       </div>
 
-      {/* Form Tambah Kontak dengan Shortcut Preset */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
             <Plus size={14} /> Tambah Akun Kontak / Sosmed
           </h3>
 
-          {/* Tombol Shortcut Preset Cepat */}
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-slate-400">Pintasan:</span>
             <button
@@ -122,7 +119,6 @@ export default function ContactsTab({ onSave }: { onSave: () => void }) {
           <Plus size={14} /> Simpan Akun Kontak
         </button>
 
-        {/* List Akun yang Terdaftar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-white/10">
           {(contacts || []).map(acc => (
             <div key={acc.id} className="p-3 rounded-xl glass-panel flex items-center justify-between border border-white/10 text-xs">

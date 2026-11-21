@@ -62,13 +62,13 @@ export default function ImageInputControl({
 
   return (
     <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-      <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-slate-300">{label}</label>
-        <div className="flex rounded-xl bg-white/10 p-0.5 text-[11px] font-mono">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <label className="min-w-0 break-words text-xs font-medium text-slate-300">{label}</label>
+        <div className="flex w-fit max-w-full shrink-0 rounded-xl bg-white/10 p-0.5 text-[11px] font-mono">
           <button
             type="button"
             onClick={() => setMode('url')}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
+            className={`flex min-h-10 items-center gap-1 rounded-lg px-2.5 py-2 transition ${
               mode === 'url' ? 'bg-white/20 text-white font-bold' : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -77,7 +77,7 @@ export default function ImageInputControl({
           <button
             type="button"
             onClick={() => setMode('file')}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
+            className={`flex min-h-10 items-center gap-1 rounded-lg px-2.5 py-2 transition ${
               mode === 'file' ? 'bg-white/20 text-white font-bold' : 'text-slate-400 hover:text-white'
             }`}
           >

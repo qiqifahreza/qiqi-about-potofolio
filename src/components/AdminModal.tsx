@@ -166,7 +166,6 @@ export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClo
               </div>
             </div>
 
-            {/* Presets */}
             <div className="mb-6">
               <label className="text-xs font-medium block mb-2">Preset Palet Cepat:</label>
               <div className="grid grid-cols-2 gap-2">

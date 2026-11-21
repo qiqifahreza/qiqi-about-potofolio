@@ -23,7 +23,6 @@ import type { Session } from '@supabase/supabase-js';
 import { usePortfolio } from '../context/PortfolioContext';
 import { supabase } from '../lib/supabase';
 
-// Import sub-komponen tab yang sudah dipecah
 import GeneralTab from './admin/GeneralTab';
 import AboutTab from './admin/AboutTab';
 import ProjectsTab from './admin/ProjectsTab';
@@ -175,7 +174,6 @@ export default function Admin() {
       isDark ? 'bg-[#090d16] text-slate-100' : 'bg-[#f8fafc] text-slate-900'
     }`}>
 
-      {/* Notifikasi Toast Disimpan */}
       {saveAlert && (
         <div className="admin-toast fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-3 text-xs font-mono font-bold">
           <Check size={16} /> DRAFT TERSIMPAN DI BROWSER
@@ -190,7 +188,6 @@ export default function Admin() {
           </div>
         </main>
       ) : access !== 'admin' ? (
-        /* Form Login Admin */
         <main className="relative z-10 min-h-screen flex items-center justify-center p-4 py-10">
           <section className="admin-login-panel w-full max-w-lg p-6 sm:p-9">
             <div className="flex justify-between items-center mb-7 text-[10px] font-mono uppercase tracking-[0.18em]">
@@ -211,7 +208,7 @@ export default function Admin() {
               </div>
               <div>
                 <p className="admin-kicker mb-1">管理者認証 // ADMIN AUTH</p>
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-mono uppercase">Control Room</h1>
+                <h1 className="text-xl sm:text-3xl font-black tracking-tight font-mono uppercase">Control Room</h1>
                 <p className="text-xs opacity-70 mt-1">Masuk untuk mengelola arsip portfolio.</p>
               </div>
             </div>
@@ -277,38 +274,37 @@ export default function Admin() {
           </section>
         </main>
       ) : (
-        /* Dashboard Admin Terbuka */
         <main className="admin-dashboard relative z-10 mx-auto max-w-[1500px] px-4 py-5 sm:px-7 lg:px-10 lg:py-8">
           <header className="admin-header-panel mb-6 p-4 sm:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex min-w-0 items-center gap-4">
                 <div className="admin-icon-stamp flex h-12 w-12 shrink-0 items-center justify-center">
                   <BookOpen size={22} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="admin-kicker mb-1">巻の零 // PORTFOLIO CONTROL SYSTEM</p>
-                  <h1 className="text-xl sm:text-2xl font-black font-mono uppercase tracking-tight">Manga Archive CMS</h1>
-                  <p className="mt-1 text-[11px] font-mono opacity-60">OPERATOR: AUTHENTICATED ADMIN // ACCESS: ROOT</p>
+                  <h1 className="break-words text-xl font-black font-mono uppercase tracking-tight sm:text-2xl">Manga Archive CMS</h1>
+                  <p className="mt-1 break-words text-[11px] font-mono opacity-60">OPERATOR: AUTHENTICATED ADMIN // ACCESS: ROOT</p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="admin-sync-badge mr-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono uppercase tracking-wider">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  {cloudStatus || 'Supabase / AUTH OK'}
+              <div className="grid min-w-0 grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+                <span className="admin-sync-badge col-span-2 flex min-w-0 items-center gap-2 px-3 py-2 text-[10px] font-mono uppercase tracking-wider sm:mr-auto sm:col-span-1">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
+                  <span className="min-w-0 break-all">{cloudStatus || 'Supabase / AUTH OK'}</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => void handleCloudSave()}
                   disabled={isSaving}
-                  className="admin-action-button flex items-center gap-2 px-4 py-2.5 text-[10px] font-black uppercase tracking-wider disabled:opacity-60"
+                  className="admin-action-button flex w-full items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-black uppercase tracking-wider disabled:opacity-60 sm:w-auto sm:px-4"
                 >
                   <Save size={14} /> {isSaving ? 'SYNCING...' : 'SAVE TO CLOUD'}
                 </button>
-                <Link to="/" className="admin-secondary-button flex items-center gap-2 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider">
+                <Link to="/" className="admin-secondary-button flex w-full items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-bold uppercase tracking-wider sm:w-auto sm:px-4">
                   <ExternalLink size={14} /> Preview
                 </Link>
-                <button type="button" onClick={() => void handleLogout()} className="admin-danger-button flex items-center gap-2 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider">
+                <button type="button" onClick={() => void handleLogout()} className="admin-danger-button flex w-full items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-bold uppercase tracking-wider sm:w-auto sm:px-4">
                   <LogOut size={14} /> Logout
                 </button>
               </div>
@@ -329,12 +325,12 @@ export default function Admin() {
                     type="button"
                     onClick={() => setActiveTab(id)}
                     aria-current={activeTab === id ? 'page' : undefined}
-                    className={`admin-nav-item flex items-center gap-3 px-3 py-3 text-left transition ${
+                    className={`admin-nav-item flex min-w-0 items-center gap-2 px-2 py-3 text-left transition sm:gap-3 sm:px-3 ${
                       activeTab === id ? 'is-active' : ''
                     }`}
                   >
-                    <Icon size={17} />
-                    <span className="min-w-0">
+                    <Icon size={17} className="shrink-0" />
+                    <span className="min-w-0 break-words">
                       <span className="block text-xs font-bold">{label}</span>
                       <span className="block text-[9px] font-mono opacity-55">{command}</span>
                     </span>
@@ -349,9 +345,9 @@ export default function Admin() {
 
             <section className="admin-content-panel min-w-0 p-4 sm:p-6 lg:p-8">
               <div className="admin-content-heading mb-6 flex items-center justify-between gap-3 border-b-2 pb-4">
-                <div>
-                  <p className="admin-kicker">CURRENT FILE // {ADMIN_TABS.find((tab) => tab.id === activeTab)?.command}</p>
-                  <h2 className="mt-1 text-lg font-black font-mono uppercase">
+                <div className="min-w-0">
+                  <p className="admin-kicker break-words">CURRENT FILE // {ADMIN_TABS.find((tab) => tab.id === activeTab)?.command}</p>
+                  <h2 className="mt-1 break-words text-lg font-black font-mono uppercase">
                     {ADMIN_TABS.find((tab) => tab.id === activeTab)?.label} Configuration
                   </h2>
                 </div>

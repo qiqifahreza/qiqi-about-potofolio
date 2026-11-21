@@ -3,7 +3,7 @@
 html,
 body {
   scroll-behavior: smooth;
-  overflow-x: clip; /* Clip mencegah layar geser samping TANPA merusak fitur sticky */
+  overflow-x: clip; /* Prevent horizontal overflow without breaking sticky elements. */
   min-width: 320px;
 }
 
@@ -26,7 +26,7 @@ body {
   opacity: 0;
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-/* Hapus canvas dari max-width: 100% agar kanvas WebGL Folder tidak terjepit */
+/* Keep WebGL canvases from inheriting the image width limit. */
 img,
 video {
   max-width: 100%;
@@ -53,7 +53,6 @@ select {
   display: none;
 }
 
-/* Animasi Cairan Mengambang Monokrom */
 @keyframes float-blob {
   0%, 100% {
     transform: translate(0px, 0px) scale(1) rotate(0deg);
@@ -122,7 +121,6 @@ select {
   animation: float-blob 20s ease-in-out 4s infinite;
 }
 
-/* Liquid Glass Global */
 .liquid-glass {
   position: relative;
   overflow: hidden;
@@ -229,7 +227,6 @@ select {
   animation: bubble-pulse 12s ease-in-out infinite alternate;
 }
 
-/* Animasi Scroll Fade-In & Slide-Up Halus */
 .scroll-fade-in {
   opacity: 0;
   transform: translate3d(0, 36px, 0);
@@ -242,7 +239,6 @@ select {
   transform: translate3d(0, 0, 0);
 }
 
-/* Animasi Fisika Tetesan Air */
 @keyframes liquid-jelly {
   0% {
     transform: scale(1, 1);
@@ -265,7 +261,6 @@ select {
   animation: liquid-jelly 0.55s cubic-bezier(0.25, 1.4, 0.5, 1);
 }
 
-/* Animasi Huruf per Huruf (Bukan Pudar) */
 @keyframes letter-pop-in {
   0% {
     opacity: 0;
@@ -289,7 +284,6 @@ select {
   animation: letter-pop-in 0.5s cubic-bezier(0.25, 1.4, 0.5, 1) forwards;
 }
 
-/* ================= MANGA EDITORIAL STYLE UTILITIES ================= */
 .manga-panel {
   border: 2px solid #09090b;
   box-shadow: 6px 6px 0px #09090b;
@@ -335,7 +329,6 @@ select {
   box-shadow: 2px 2px 0px #ffffff;
 }
 
-/* Efek Titik Halftone Screentone Latar Komik */
 .manga-screentone {
   background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
   background-size: 10px 10px;
@@ -346,21 +339,12 @@ select {
   background-size: 10px 10px;
 }
 
-/* Manga x terminal treatment scoped to the admin control room. */
 .admin-interface {
-  --admin-paper: #fff;
-  --admin-ink: #111;
-  --admin-line: rgba(17, 17, 17, 0.22);
-  --admin-muted: #52525b;
   background-image: radial-gradient(rgba(17, 17, 17, 0.1) 0.8px, transparent 0.8px);
   background-size: 7px 7px;
 }
 
 .dark .admin-interface {
-  --admin-paper: #101114;
-  --admin-ink: #f4f4f5;
-  --admin-line: rgba(255, 255, 255, 0.24);
-  --admin-muted: #a1a1aa;
   background-image: radial-gradient(rgba(255, 255, 255, 0.09) 0.8px, transparent 0.8px);
 }
 
@@ -451,6 +435,14 @@ select {
 .admin-interface textarea::placeholder {
   color: var(--admin-muted);
   opacity: 0.7;
+}
+
+@media (max-width: 639px) {
+  .admin-interface input:not([type="color"]),
+  .admin-interface textarea,
+  .admin-interface select {
+    font-size: 16px;
+  }
 }
 
 .admin-interface .glass-panel {

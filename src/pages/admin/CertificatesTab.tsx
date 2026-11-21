@@ -25,7 +25,6 @@ export default function CertificatesTab({ onSave }: { onSave: () => void }) {
         <p className="text-xs text-slate-400">Atur kartu piagam sertifikat dan piala penghargaan kompetisi.</p>
       </div>
 
-      {/* Form Sertifikat */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
           <Award size={15} /> Tambah Sertifikat Baru
@@ -76,7 +75,6 @@ export default function CertificatesTab({ onSave }: { onSave: () => void }) {
         </div>
       </div>
 
-      {/* Form Awards */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
           <Award size={15} /> Tambah Penghargaan (Awards) Baru

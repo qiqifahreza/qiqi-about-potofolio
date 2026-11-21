@@ -25,7 +25,7 @@ function PortfolioHome() {
   const { isDark } = usePortfolio();
   const [activeSectionIdx, setActiveSectionIdx] = useState<number>(0);
 
-  // ScrollSpy Presisi untuk menggerakkan garis penunjuk LineSidebar
+  // Track the section shown in the sidebar.
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 75) {
@@ -61,7 +61,6 @@ function PortfolioHome() {
     <div className={`min-h-screen relative overflow-x-clip transition-colors duration-500 font-sans manga-screentone ${
       isDark ? 'bg-[#07080d] text-slate-100' : 'bg-[#f4f3ef] text-zinc-950'
     }`}>
-      {/* LATAR BELAKANG TOPOGRAFI HIDUP */}
       <TopographyBackground
         className="fixed inset-0 z-0 pointer-events-none"
         lineColor={isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)'}
@@ -71,10 +70,8 @@ function PortfolioHome() {
         peak={1.2}
       />
 
-      {/* NAVBAR RINGKAS: Hanya Logo+Qiqi di Kiri & Sun/Moon di Kanan */}
-      <Navbar />
+      <Navbar activeSectionIdx={activeSectionIdx} onSectionSelect={scrollToSection} />
 
-      {/* LINE SIDEBAR DI SISI KIRI LAYAR (DESKTOP) */}
       <aside className="fixed left-4 xl:left-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
         <LineSidebar
           items={SIDEBAR_SECTIONS.map((s) => s.label)}
@@ -91,10 +88,8 @@ function PortfolioHome() {
           onItemClick={(idx) => scrollToSection(idx)}
         />
       </aside>
-      {/* MANGA HUD TELEMETRY DI SISI KANAN (DESKTOP) */}
 <RightHudSidebar />
 
-      {/* KONTEN UTAMA (Dengan padding aman agar tidak bertabrakan dengan LineSidebar di laptop) */}
       <main className="relative z-10 lg:pl-44 2xl:pl-0">
         <Hero />
 
