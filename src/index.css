@@ -1,8 +1,14 @@
 @import "tailwindcss";
-
-html {
+@custom-variant dark (&:where(.dark, .dark *));
+html,
+body {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip; /* Clip mencegah layar geser samping TANPA merusak fitur sticky */
+  min-width: 320px;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 @keyframes fade-up {
@@ -20,20 +26,17 @@ html {
   opacity: 0;
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-
-body {
-  min-width: 320px;
-  overflow-x: hidden;
-}
-
+/* Hapus canvas dari max-width: 100% agar kanvas WebGL Folder tidak terjepit */
 img,
-svg,
-canvas,
 video {
   max-width: 100%;
   display: block;
 }
 
+svg,
+canvas {
+  display: block;
+}
 button,
 input,
 textarea,
@@ -91,14 +94,6 @@ select {
     transform: scale(1.12);
     opacity: 0.8;
   }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -247,7 +242,7 @@ html {
   transform: translate3d(0, 0, 0);
 }
 
-/* Animasi Fisika Tetesan Air / Liquid Jelly Wobble */
+/* Animasi Fisika Tetesan Air */
 @keyframes liquid-jelly {
   0% {
     transform: scale(1, 1);
@@ -268,4 +263,327 @@ html {
 
 .animate-liquid-jelly {
   animation: liquid-jelly 0.55s cubic-bezier(0.25, 1.4, 0.5, 1);
+}
+
+/* Animasi Huruf per Huruf (Bukan Pudar) */
+@keyframes letter-pop-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0) scale(0.65);
+    filter: blur(6px);
+  }
+  65% {
+    opacity: 1;
+    transform: translate3d(0, -6px, 0) scale(1.08);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.animate-letter-pop {
+  display: inline-block;
+  animation: letter-pop-in 0.5s cubic-bezier(0.25, 1.4, 0.5, 1) forwards;
+}
+
+/* ================= MANGA EDITORIAL STYLE UTILITIES ================= */
+.manga-panel {
+  border: 2px solid #09090b;
+  box-shadow: 6px 6px 0px #09090b;
+  background-color: rgba(250, 250, 252, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.dark .manga-panel {
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.85);
+  background-color: rgba(9, 11, 16, 0.88);
+  backdrop-filter: blur(12px);
+}
+
+.manga-btn {
+  border: 2px solid #09090b;
+  box-shadow: 4px 4px 0px #09090b;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.manga-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #09090b;
+}
+
+.manga-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #09090b;
+}
+
+.dark .manga-btn {
+  border: 2px solid #ffffff;
+  box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.85);
+}
+
+.dark .manga-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #ffffff;
+}
+
+.dark .manga-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #ffffff;
+}
+
+/* Efek Titik Halftone Screentone Latar Komik */
+.manga-screentone {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.dark .manga-screentone {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+/* Manga x terminal treatment scoped to the admin control room. */
+.admin-interface {
+  --admin-paper: #fff;
+  --admin-ink: #111;
+  --admin-line: rgba(17, 17, 17, 0.22);
+  --admin-muted: #52525b;
+  background-image: radial-gradient(rgba(17, 17, 17, 0.1) 0.8px, transparent 0.8px);
+  background-size: 7px 7px;
+}
+
+.dark .admin-interface {
+  --admin-paper: #101114;
+  --admin-ink: #f4f4f5;
+  --admin-line: rgba(255, 255, 255, 0.24);
+  --admin-muted: #a1a1aa;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 0.8px, transparent 0.8px);
+}
+
+.admin-login-panel,
+.admin-header-panel,
+.admin-nav-panel,
+.admin-content-panel,
+.admin-terminal-panel {
+  position: relative;
+  border: 2px solid var(--admin-ink);
+  background: var(--admin-paper);
+  color: var(--admin-ink);
+  box-shadow: 7px 7px 0 var(--admin-ink);
+}
+
+.admin-login-panel::after,
+.admin-header-panel::after,
+.admin-content-panel::after {
+  position: absolute;
+  inset: 7px;
+  z-index: 0;
+  border: 1px solid var(--admin-line);
+  content: "";
+  pointer-events: none;
+}
+
+.admin-login-panel > *,
+.admin-header-panel > *,
+.admin-content-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-kicker,
+.admin-field-label {
+  color: var(--admin-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.admin-icon-stamp {
+  border: 2px solid var(--admin-ink);
+  background: var(--admin-ink);
+  color: var(--admin-paper);
+  box-shadow: 3px 3px 0 var(--admin-ink);
+}
+
+.admin-terminal-bar,
+.admin-terminal-note {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #111318;
+  color: #e4e4e7;
+}
+
+.admin-terminal-bar {
+  box-shadow: 3px 3px 0 rgba(17, 17, 17, 0.3);
+}
+
+.admin-terminal-note {
+  border-style: dashed;
+  color: #a1a1aa;
+}
+
+.admin-input,
+.admin-interface input:not([type="color"]),
+.admin-interface textarea,
+.admin-interface select {
+  border: 1px solid var(--admin-line);
+  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--admin-paper) 94%, var(--admin-ink));
+  color: var(--admin-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  outline: none;
+}
+
+.admin-input:focus,
+.admin-interface input:focus,
+.admin-interface textarea:focus,
+.admin-interface select:focus {
+  border-color: var(--admin-ink);
+  box-shadow: 3px 3px 0 var(--admin-ink);
+}
+
+.admin-interface input::placeholder,
+.admin-interface textarea::placeholder {
+  color: var(--admin-muted);
+  opacity: 0.7;
+}
+
+.admin-interface .glass-panel {
+  border: 1px solid var(--admin-line);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--admin-paper) 95%, var(--admin-ink));
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--admin-ink) 70%, transparent);
+  color: var(--admin-ink);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.admin-interface .glass-panel::before,
+.admin-interface .glass-panel::after {
+  display: none;
+}
+
+.admin-interface div[class*="bg-white/5"][class*="border-white/10"] {
+  border-color: var(--admin-line);
+  background-color: color-mix(in srgb, var(--admin-paper) 94%, var(--admin-ink));
+}
+
+.admin-action-button,
+.admin-secondary-button,
+.admin-danger-button {
+  min-height: 2.5rem;
+  border: 2px solid var(--admin-ink);
+  border-radius: 0.25rem;
+  box-shadow: 3px 3px 0 var(--admin-ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.admin-action-button {
+  background: var(--admin-ink);
+  color: var(--admin-paper);
+}
+
+.admin-secondary-button {
+  background: var(--admin-paper);
+  color: var(--admin-ink);
+}
+
+.admin-danger-button {
+  border-color: #be123c;
+  background: color-mix(in srgb, var(--admin-paper) 92%, #fb7185);
+  color: #be123c;
+  box-shadow: 3px 3px 0 #be123c;
+}
+
+.admin-action-button:hover:not(:disabled),
+.admin-secondary-button:hover,
+.admin-danger-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--admin-ink);
+}
+
+.admin-nav-item {
+  border: 1px solid var(--admin-line);
+  background: transparent;
+  color: var(--admin-ink);
+}
+
+.admin-nav-item:hover,
+.admin-nav-item.is-active {
+  border-color: var(--admin-ink);
+  background: var(--admin-ink);
+  color: var(--admin-paper);
+  box-shadow: 3px 3px 0 var(--admin-ink);
+}
+
+.admin-nav-item.is-active svg {
+  color: #22d3ee;
+}
+
+.admin-content-heading {
+  border-color: var(--admin-line);
+}
+
+.admin-page-stamp {
+  border: 2px solid #e11d48;
+  padding: 0.4rem 0.7rem;
+  color: #e11d48;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 900;
+  transform: rotate(7deg);
+}
+
+.admin-muted-link {
+  color: var(--admin-muted);
+}
+
+.admin-muted-link:hover {
+  color: var(--admin-ink);
+}
+
+.admin-alert {
+  border: 1px dashed #e11d48;
+  background: color-mix(in srgb, var(--admin-paper) 90%, #fb7185);
+  color: #be123c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.admin-toast {
+  border: 2px solid var(--admin-ink);
+  background: var(--admin-paper);
+  color: var(--admin-ink);
+  box-shadow: 4px 4px 0 var(--admin-ink);
+}
+
+.admin-sync-badge {
+  border: 1px solid var(--admin-line);
+  background: var(--admin-paper);
+  color: var(--admin-ink);
+}
+
+.admin-interface button[style*="linear-gradient"] {
+  border: 2px solid var(--admin-ink);
+  border-radius: 0.25rem;
+  background: var(--admin-ink) !important;
+  color: var(--admin-paper) !important;
+  box-shadow: 3px 3px 0 var(--admin-ink);
+}
+
+.dark .admin-interface button[style*="linear-gradient"] {
+  background: var(--admin-ink) !important;
+  color: var(--admin-paper) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-action-button,
+  .admin-secondary-button,
+  .admin-danger-button {
+    transition: none;
+  }
 }

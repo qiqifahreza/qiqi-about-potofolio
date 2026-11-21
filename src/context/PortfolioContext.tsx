@@ -13,14 +13,20 @@ export interface GeneralSettings {
   heroSignature: string;
   heroImageUrl: string;
   currentStatusTitle: string;
-  currentStatusText: string;
-  newsLabel: string;
   heroIntro: string;
   heroDescription: string;
   heroQuote: string;
   heroQuoteAuthor: string;
   jikosoukaiTitle?: string;
   heroMetaText?: string;
+}
+
+export interface TechLogoItem {
+  id: string;
+  title: string;
+  src?: string;
+  href?: string;
+  hoverColor?: string;
 }
 
 export interface EducationItem {
@@ -47,7 +53,6 @@ export interface PersonalInfo {
   bio: string;
   aboutImageUrl: string;
   cvUrl: string;
-  skills: string[];
   education: EducationItem[];
   experience: ExperienceItem[];
 }
@@ -94,11 +99,6 @@ export interface ContactSettings {
   description: string;
 }
 
-export interface AdminCredentials {
-  username: string;
-  password: string;
-}
-
 // ================= DATA DEFAULT: 100% KOSONG DARI AWAL =================
 const DEFAULT_GENERAL: GeneralSettings = {
   webTitle: '',
@@ -111,8 +111,6 @@ const DEFAULT_GENERAL: GeneralSettings = {
   heroSignature: '',
   heroImageUrl: '',
   currentStatusTitle: '',
-  currentStatusText: '',
-  newsLabel: '',
   heroIntro: '',
   heroDescription: '',
   heroQuote: '',
@@ -129,11 +127,11 @@ const DEFAULT_PERSONAL: PersonalInfo = {
   bio: '',
   aboutImageUrl: '',
   cvUrl: '',
-  skills: [],
   education: [],
   experience: []
 };
 
+const DEFAULT_TECH_LOGOS: TechLogoItem[] = [];
 const DEFAULT_PROJECTS: ProjectItem[] = [];
 const DEFAULT_CERTIFICATES: CertificateItem[] = [];
 const DEFAULT_AWARDS: AwardItem[] = [];
@@ -142,11 +140,6 @@ const DEFAULT_CONTACTS: ContactAccount[] = [];
 const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
   title: '',
   description: ''
-};
-
-const DEFAULT_ADMIN_CREDENTIALS: AdminCredentials = {
-  username: 'admin',
-  password: 'admin123'
 };
 
 // ================= CONTEXT INTERFACE =================
@@ -164,8 +157,6 @@ export interface PortfolioContextType {
 
   personal: PersonalInfo;
   updatePersonal: (data: Partial<PersonalInfo>) => void;
-  addSkill: (skill: string) => void;
-  removeSkill: (skill: string) => void;
   addEducation: (edu: Omit<EducationItem, 'id'>) => void;
   deleteEducation: (id: string) => void;
   addExperience: (exp: Omit<ExperienceItem, 'id'>) => void;
@@ -190,12 +181,13 @@ export interface PortfolioContextType {
   contactSettings: ContactSettings;
   updateContactSettings: (data: Partial<ContactSettings>) => void;
 
-  adminCredentials: AdminCredentials;
-  updateAdminCredentials: (data: Partial<AdminCredentials>) => void;
-
   isSaving: boolean;
   savePortfolio: () => Promise<void>;
   resetAllData: () => void;
+
+  techLogos: TechLogoItem[];
+  addTechLogo: (logo: Omit<TechLogoItem, 'id'>) => void;
+  deleteTechLogo: (id: string) => void;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -226,6 +218,27 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       return '#ffffff';
     }
   });
+
+  // Safe load techLogos (filter item kosong)
+  const [techLogos, setTechLogos] = useState<TechLogoItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_tech_logos');
+      if (!saved) return DEFAULT_TECH_LOGOS;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed.filter((item: TechLogoItem) => item && item.title) : DEFAULT_TECH_LOGOS;
+    } catch {
+      return DEFAULT_TECH_LOGOS;
+    }
+  });
+
+  const addTechLogo = (logo: Omit<TechLogoItem, 'id'>) => {
+    const newItem: TechLogoItem = { ...logo, id: Date.now().toString() };
+    setTechLogos((prev) => [...prev, newItem]);
+  };
+
+  const deleteTechLogo = (id: string) => {
+    setTechLogos((prev) => prev.filter((item) => item.id !== id));
+  };
 
   const [general, setGeneral] = useState<GeneralSettings>(() => {
     try {
@@ -310,19 +323,10 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  const [adminCredentials, setAdminCredentials] = useState<AdminCredentials>(() => {
-    try {
-      const saved = localStorage.getItem('portfolio_admin_credentials');
-      return saved ? JSON.parse(saved) : DEFAULT_ADMIN_CREDENTIALS;
-    } catch {
-      return DEFAULT_ADMIN_CREDENTIALS;
-    }
-  });
-
   const [isRemoteLoaded, setIsRemoteLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load dari database Supabase
+  // ================= LOAD DARI DATABASE SUPABASE (TERMASUK TECH_LOGOS) =================
   useEffect(() => {
     let ignore = false;
 
@@ -343,7 +347,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           awardRes,
           contRes,
           cSetRes,
-          admRes,
+          logoRes,
         ] = await Promise.all([
           supabase.from('general_settings').select('*').eq('id', 'default').maybeSingle(),
           supabase.from('personal_info').select('*').eq('id', 'default').maybeSingle(),
@@ -354,7 +358,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           supabase.from('awards').select('*').order('created_at', { ascending: false }),
           supabase.from('contacts').select('*').order('created_at', { ascending: true }),
           supabase.from('contact_settings').select('*').eq('id', 'default').maybeSingle(),
-          supabase.from('admin_credentials').select('*').eq('id', 'default').maybeSingle(),
+          supabase.from('tech_logos').select('*').order('created_at', { ascending: true }),
         ]);
 
         if (ignore) return;
@@ -372,8 +376,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
             heroSignature: g.hero_signature ?? '',
             heroImageUrl: g.hero_image_url ?? '',
             currentStatusTitle: g.current_status_title ?? '',
-            currentStatusText: g.current_status_text ?? '',
-            newsLabel: g.news_label ?? '',
             heroIntro: g.hero_intro ?? '',
             heroDescription: g.hero_description ?? '',
             heroQuote: g.hero_quote ?? '',
@@ -396,7 +398,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
             bio: p.bio ?? '',
             aboutImageUrl: p.about_image_url ?? '',
             cvUrl: p.cv_url ?? '',
-            skills: Array.isArray(p.skills) ? p.skills : [],
             education: [],
             experience: [],
           });
@@ -488,11 +489,16 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           });
         }
 
-        if (admRes.data) {
-          setAdminCredentials({
-            username: admRes.data.username ?? DEFAULT_ADMIN_CREDENTIALS.username,
-            password: admRes.data.password ?? DEFAULT_ADMIN_CREDENTIALS.password,
-          });
+        if (logoRes.data) {
+          setTechLogos(
+            logoRes.data.map((tl: { id: string; title: string; src?: string; href?: string; hover_color?: string }) => ({
+              id: tl.id,
+              title: tl.title,
+              src: tl.src ?? '',
+              href: tl.href ?? '',
+              hoverColor: tl.hover_color ?? '',
+            }))
+          );
         }
       } catch (err) {
         console.error('Error load Supabase:', err);
@@ -508,14 +514,22 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Simpan ke database Supabase
+  // ================= SIMPAN KE DATABASE SUPABASE (TERMASUK TECH_LOGOS) =================
   const savePortfolio = async () => {
-    if (!supabase || !isRemoteLoaded) return;
+    if (!supabase) throw new Error('Supabase is not configured.');
+    if (!isRemoteLoaded) throw new Error('Portfolio data is still loading from Supabase.');
     setIsSaving(true);
 
     try {
+      const ensureSuccess = async (
+        operation: PromiseLike<{ error: { message: string } | null }>
+      ) => {
+        const { error } = await operation;
+        if (error) throw error;
+      };
+
       await Promise.all([
-        supabase.from('general_settings').upsert({
+        ensureSuccess(supabase.from('general_settings').upsert({
           id: 'default',
           web_title: general.webTitle,
           favicon_url: general.faviconUrl,
@@ -527,8 +541,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           hero_signature: general.heroSignature,
           hero_image_url: general.heroImageUrl,
           current_status_title: general.currentStatusTitle,
-          current_status_text: general.currentStatusText,
-          news_label: general.newsLabel,
           hero_intro: general.heroIntro,
           hero_description: general.heroDescription,
           hero_quote: general.heroQuote,
@@ -539,9 +551,9 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           secondary_color: secondaryColor,
           is_dark: isDark,
           updated_at: new Date().toISOString(),
-        }),
+        })),
 
-        supabase.from('personal_info').upsert({
+        ensureSuccess(supabase.from('personal_info').upsert({
           id: 'default',
           name: personal.name,
           nickname: personal.nickname,
@@ -550,14 +562,13 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
           bio: personal.bio,
           about_image_url: personal.aboutImageUrl,
           cv_url: personal.cvUrl,
-          skills: personal.skills,
           updated_at: new Date().toISOString(),
-        }),
+        })),
 
         (async () => {
-          await supabase.from('education').delete().neq('id', '');
+          await ensureSuccess(supabase.from('education').delete().neq('id', ''));
           if (personal.education && personal.education.length > 0) {
-            await supabase.from('education').insert(
+            await ensureSuccess(supabase.from('education').insert(
               personal.education.map((e) => ({
                 id: e.id,
                 institution: e.institution,
@@ -565,14 +576,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
                 sub_detail: e.subDetail,
                 period: e.period,
               }))
-            );
+            ));
           }
         })(),
 
         (async () => {
-          await supabase.from('experience').delete().neq('id', '');
+          await ensureSuccess(supabase.from('experience').delete().neq('id', ''));
           if (personal.experience && personal.experience.length > 0) {
-            await supabase.from('experience').insert(
+            await ensureSuccess(supabase.from('experience').insert(
               personal.experience.map((x) => ({
                 id: x.id,
                 company: x.company,
@@ -580,14 +591,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
                 sub_detail: x.subDetail,
                 period: x.period,
               }))
-            );
+            ));
           }
         })(),
 
         (async () => {
-          await supabase.from('projects').delete().neq('id', '');
+          await ensureSuccess(supabase.from('projects').delete().neq('id', ''));
           if (projects && projects.length > 0) {
-            await supabase.from('projects').insert(
+            await ensureSuccess(supabase.from('projects').insert(
               projects.map((p) => ({
                 id: p.id,
                 title: p.title,
@@ -598,14 +609,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
                 demo: p.demo,
                 image_url: p.imageUrl ?? '',
               }))
-            );
+            ));
           }
         })(),
 
         (async () => {
-          await supabase.from('certificates').delete().neq('id', '');
+          await ensureSuccess(supabase.from('certificates').delete().neq('id', ''));
           if (certificates && certificates.length > 0) {
-            await supabase.from('certificates').insert(
+            await ensureSuccess(supabase.from('certificates').insert(
               certificates.map((c) => ({
                 id: c.id,
                 title: c.title,
@@ -615,14 +626,14 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
                 credential_url: c.credentialUrl ?? '',
                 image_url: c.imageUrl ?? '',
               }))
-            );
+            ));
           }
         })(),
 
         (async () => {
-          await supabase.from('awards').delete().neq('id', '');
+          await ensureSuccess(supabase.from('awards').delete().neq('id', ''));
           if (awards && awards.length > 0) {
-            await supabase.from('awards').insert(
+            await ensureSuccess(supabase.from('awards').insert(
               awards.map((a) => ({
                 id: a.id,
                 title: a.title,
@@ -631,46 +642,56 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
                 description: a.description,
                 image_url: a.imageUrl ?? '',
               }))
-            );
+            ));
           }
         })(),
 
         (async () => {
-          await supabase.from('contacts').delete().neq('id', '');
+          await ensureSuccess(supabase.from('contacts').delete().neq('id', ''));
           if (contacts && contacts.length > 0) {
-            await supabase.from('contacts').insert(
+            await ensureSuccess(supabase.from('contacts').insert(
               contacts.map((ct) => ({
                 id: ct.id,
                 platform: ct.platform,
                 label: ct.label,
                 url: ct.url,
               }))
-            );
+            ));
           }
         })(),
 
-        supabase.from('contact_settings').upsert({
+        (async () => {
+          await ensureSuccess(supabase.from('tech_logos').delete().neq('id', ''));
+          if (techLogos && techLogos.length > 0) {
+            await ensureSuccess(supabase.from('tech_logos').insert(
+              techLogos.map((tl) => ({
+                id: tl.id,
+                title: tl.title,
+                src: tl.src ?? '',
+                href: tl.href ?? '',
+                hover_color: tl.hoverColor ?? '',
+              }))
+            ));
+          }
+        })(),
+
+        ensureSuccess(supabase.from('contact_settings').upsert({
           id: 'default',
           title: contactSettings.title,
           description: contactSettings.description,
           updated_at: new Date().toISOString(),
-        }),
+        })),
 
-        supabase.from('admin_credentials').upsert({
-          id: 'default',
-          username: adminCredentials.username,
-          password: adminCredentials.password,
-          updated_at: new Date().toISOString(),
-        }),
       ]);
     } catch (error) {
       console.error('Error simpan Supabase:', error);
+      throw error;
     } finally {
       setIsSaving(false);
     }
   };
 
-  // LocalStorage sync
+  // ================= SINKRONISASI LOCALSTORAGE (TERMASUK TECH_LOGOS) =================
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -683,7 +704,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('portfolio_awards', JSON.stringify(awards));
       localStorage.setItem('portfolio_contacts', JSON.stringify(contacts));
       localStorage.setItem('portfolio_contact_settings', JSON.stringify(contactSettings));
-      localStorage.setItem('portfolio_admin_credentials', JSON.stringify(adminCredentials));
+      localStorage.setItem('portfolio_tech_logos', JSON.stringify(techLogos));
     } catch {
       // safe ignore
     }
@@ -693,7 +714,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, adminCredentials]);
+  }, [isDark, primaryColor, secondaryColor, general, personal, projects, certificates, awards, contacts, contactSettings, techLogos]);
 
   const toggleTheme = () => {
     setIsDark((prev: boolean) => {
@@ -725,20 +746,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
 
   const updatePersonal = (data: Partial<PersonalInfo>) => {
     setPersonal((prev: PersonalInfo) => ({ ...prev, ...data }));
-  };
-
-  const addSkill = (skill: string) => {
-    const trimmed = skill.trim();
-    if (trimmed && !personal.skills.includes(trimmed)) {
-      setPersonal((prev: PersonalInfo) => ({ ...prev, skills: [...prev.skills, trimmed] }));
-    }
-  };
-
-  const removeSkill = (skillToRemove: string) => {
-    setPersonal((prev: PersonalInfo) => ({
-      ...prev,
-      skills: prev.skills.filter((s: string) => s !== skillToRemove),
-    }));
   };
 
   const addEducation = (edu: Omit<EducationItem, 'id'>) => {
@@ -811,19 +818,15 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     setContactSettings((prev: ContactSettings) => ({ ...prev, ...data }));
   };
 
-  const updateAdminCredentials = (data: Partial<AdminCredentials>) => {
-    setAdminCredentials((prev: AdminCredentials) => ({ ...prev, ...data }));
-  };
-
   const resetAllData = () => {
     setGeneral(DEFAULT_GENERAL);
     setPersonal(DEFAULT_PERSONAL);
+    setTechLogos(DEFAULT_TECH_LOGOS);
     setProjects(DEFAULT_PROJECTS);
     setCertificates(DEFAULT_CERTIFICATES);
     setAwards(DEFAULT_AWARDS);
     setContacts(DEFAULT_CONTACTS);
     setContactSettings(DEFAULT_CONTACT_SETTINGS);
-    setAdminCredentials(DEFAULT_ADMIN_CREDENTIALS);
     resetTheme();
   };
 
@@ -841,8 +844,6 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         updateGeneral,
         personal,
         updatePersonal,
-        addSkill,
-        removeSkill,
         addEducation,
         deleteEducation,
         addExperience,
@@ -861,11 +862,12 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         deleteContact,
         contactSettings,
         updateContactSettings,
-        adminCredentials,
-        updateAdminCredentials,
         isSaving,
         savePortfolio,
         resetAllData,
+        techLogos,
+        addTechLogo,
+        deleteTechLogo,
       }}
     >
       {children}

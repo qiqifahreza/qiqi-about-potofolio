@@ -1,28 +1,28 @@
+import { useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import ImageInputControl from '../../components/admin/ImageInputControl';
 
-const PRESET_THEMES = [
-  { name: 'Neon Cyber', primary: '#06b6d4', secondary: '#8b5cf6' },
-  { name: 'Sunset Glow', primary: '#f43f5e', secondary: '#f59e0b' },
-  { name: 'Emerald Ocean', primary: '#10b981', secondary: '#0284c7' },
-  { name: 'Royal Purple', primary: '#a855f7', secondary: '#ec4899' },
-];
-
 export default function GeneralTab({ onSave }: { onSave: () => void }) {
+  // Semua hook ditaruh di dalam komponen secara benar
   const { 
     primaryColor, 
-    setPrimaryColor, 
     secondaryColor, 
-    setSecondaryColor, 
     general, 
-    updateGeneral 
+    updateGeneral,
+    techLogos,
+    addTechLogo,
+    deleteTechLogo
   } = usePortfolio();
+
+  const [newLogoTitle, setNewLogoTitle] = useState('');
+  const [newLogoUrl, setNewLogoUrl] = useState('');
+  const [newLogoHref, setNewLogoHref] = useState('');
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-bold mb-1">Pengaturan Beranda & Tema</h2>
-        <p className="text-xs text-slate-400">Atur palet warna aksen, foto utama Hero di Beranda, teks serif, dan logo navbar.</p>
+        <h2 className="text-xl font-bold mb-1">Pengaturan Beranda</h2>
+        <p className="text-xs text-slate-400">Atur foto utama Hero di Beranda, teks, logo loop, identitas, dan logo navbar.</p>
       </div>
 
       {/* 1. Identitas Website & Navbar */}
@@ -68,64 +68,6 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         </div>
       </div>
 
-      {/* 2. Color Pickers */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 rounded-2xl bg-white/5 border border-white/10">
-        <div>
-          <label className="text-xs font-medium block mb-1.5">Warna Primary:</label>
-          <div className="flex items-center gap-3">
-            <input 
-              type="color" 
-              value={primaryColor} 
-              onChange={(e) => setPrimaryColor(e.target.value)} 
-              className="w-10 h-10 rounded-xl cursor-pointer bg-transparent border-0"
-            />
-            <input 
-              type="text" 
-              value={primaryColor} 
-              onChange={(e) => setPrimaryColor(e.target.value)} 
-              className="flex-1 px-3 py-2 rounded-xl glass-panel text-xs font-mono uppercase"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="text-xs font-medium block mb-1.5">Warna Secondary:</label>
-          <div className="flex items-center gap-3">
-            <input 
-              type="color" 
-              value={secondaryColor} 
-              onChange={(e) => setSecondaryColor(e.target.value)} 
-              className="w-10 h-10 rounded-xl cursor-pointer bg-transparent border-0"
-            />
-            <input 
-              type="text" 
-              value={secondaryColor} 
-              onChange={(e) => setSecondaryColor(e.target.value)} 
-              className="flex-1 px-3 py-2 rounded-xl glass-panel text-xs font-mono uppercase"
-            />
-          </div>
-        </div>
-        <div className="sm:col-span-2 pt-2">
-          <label className="text-xs font-medium block mb-2">Preset Cepat:</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {PRESET_THEMES.map((theme, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => {
-                  setPrimaryColor(theme.primary);
-                  setSecondaryColor(theme.secondary);
-                  onSave();
-                }}
-                className="px-3 py-2 rounded-xl glass-panel text-[11px] flex items-center justify-between hover:border-white/30"
-              >
-                <span>{theme.name}</span>
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: theme.primary }} />
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* 3. Hero Photo Beranda */}
       <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
         <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">Foto Model Khusus Beranda (Hero Cutout)</h3>
@@ -137,7 +79,7 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
         />
       </div>
 
-      {/* 4. Hero Magazine Details (BEBAS DIHAPUS SAMPAI KOSONG) */}
+      {/* 4. Hero Magazine Details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1">Badge Teks Hero (Kiri Atas):</label>
@@ -233,9 +175,9 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
           <label className="text-xs font-medium text-slate-400 block mb-1">Deskripsi News (Kiri Bawah):</label>
           <textarea 
             rows={2}
-            value={general.heroDescription ?? general.currentStatusText ?? ''} 
+            value={general.heroDescription ?? ''} 
             onChange={(e) => {
-              updateGeneral({ heroDescription: e.target.value, currentStatusText: e.target.value });
+              updateGeneral({ heroDescription: e.target.value });
             }}
             placeholder="Deskripsi status atau berita..."
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
@@ -250,6 +192,103 @@ export default function GeneralTab({ onSave }: { onSave: () => void }) {
             placeholder="It's not impossible, it's just hard"
             className="w-full px-4 py-2.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
           />
+        </div>
+      </div>
+
+      {/* 5. Pengaturan Logo Loop Marquee */}
+      <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+              Kelola Logo Loop Marquee (Pojok Kanan Atas Beranda)
+            </h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Logo teknologi atau brand yang berjalan melingkar di atas tanggal lahir.
+            </p>
+          </div>
+          <span className="text-xs font-mono opacity-60">Total: {techLogos?.length || 0} Logo</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Nama Logo / Teknologi:</label>
+            <input 
+              type="text" 
+              placeholder="cth: React, Golang, Figma" 
+              value={newLogoTitle} 
+              onChange={(e) => setNewLogoTitle(e.target.value)} 
+              className="w-full px-3 py-2 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Link URL Website (Opsional):</label>
+            <input 
+              type="url" 
+              placeholder="https://react.dev" 
+              value={newLogoHref} 
+              onChange={(e) => setNewLogoHref(e.target.value)} 
+              className="w-full px-3 py-2 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Link Gambar / Icon SVG:</label>
+            <input 
+              type="text" 
+              placeholder="https://... atau data:image..." 
+              value={newLogoUrl} 
+              onChange={(e) => setNewLogoUrl(e.target.value)} 
+              className="w-full px-3 py-2 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            if (!newLogoTitle) return;
+            addTechLogo({
+              title: newLogoTitle,
+              src: newLogoUrl || undefined,
+              href: newLogoHref || '#',
+            });
+            setNewLogoTitle('');
+            setNewLogoUrl('');
+            setNewLogoHref('');
+            onSave();
+          }}
+          className="px-4 py-2 rounded-xl text-xs font-semibold text-white uppercase tracking-wider shadow transition"
+          style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
+        >
+          + Tambah ke Logo Loop
+        </button>
+
+        <div className="pt-3 border-t border-white/10">
+          <div className="flex flex-wrap gap-2.5">
+            {(techLogos || []).map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
+              >
+                {item.src && (
+                  <img src={item.src} alt={item.title} className="w-4 h-4 object-contain" />
+                )}
+                <span className="font-semibold text-slate-200">{item.title}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    deleteTechLogo(item.id);
+                    onSave();
+                  }}
+                  className="text-slate-400 hover:text-rose-400 transition ml-1"
+                  title="Hapus Logo"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

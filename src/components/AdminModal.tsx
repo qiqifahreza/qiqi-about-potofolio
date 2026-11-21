@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, X, RotateCcw } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { supabase } from '../lib/supabase';
 
 const PRESET_THEMES = [
   { name: 'Neon Cyber', primary: '#06b6d4', secondary: '#8b5cf6' },
@@ -12,20 +13,39 @@ const PRESET_THEMES = [
 export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { primaryColor, setPrimaryColor, secondaryColor, setSecondaryColor, resetTheme } = useTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === 'admin123') {
-      setIsAuthenticated(true);
-      setPasswordError(false);
-      setPasswordInput('');
-    } else {
+    if (!supabase) {
       setPasswordError(true);
+      return;
     }
+
+    const email = emailInput.trim();
+    if (!email || !passwordInput) {
+      setPasswordError(true);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: passwordInput,
+    });
+
+    if (error) {
+      setPasswordError(true);
+      return;
+    }
+
+    setIsAuthenticated(true);
+    setPasswordError(false);
+    setEmailInput('');
+    setPasswordInput('');
   };
 
   return (
@@ -46,21 +66,40 @@ export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClo
             </p>
 
             <form onSubmit={handleLogin}>
+              {!supabase && (
+                <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+                  Supabase belum dikonfigurasi. Tambahkan <span className="font-mono">VITE_SUPABASE_URL</span> dan <span className="font-mono">VITE_SUPABASE_ANON_KEY</span> di file <span className="font-mono">.env</span>.
+                </div>
+              )}
+
+              <div className="mb-4">
+                <input 
+                  type="email" 
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="admin@contoh.com"
+                  className="w-full px-4 py-3 rounded-xl glass-panel bg-white/5 border border-white/10 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!supabase}
+                />
+              </div>
+
               <div className="mb-4">
                 <input 
                   type="password" 
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Passcode (Default: admin123)"
-                  className="w-full px-4 py-3 rounded-xl glass-panel bg-white/5 border border-white/10 text-sm focus:outline-none"
+                  placeholder="Password admin"
+                  className="w-full px-4 py-3 rounded-xl glass-panel bg-white/5 border border-white/10 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!supabase}
                 />
                 {passwordError && (
-                  <p className="text-xs text-rose-400 mt-1.5">Passcode salah! Gunakan: admin123</p>
+                  <p className="text-xs text-rose-400 mt-1.5">Email atau password salah atau Supabase belum siap.</p>
                 )}
               </div>
               <button 
                 type="submit" 
-                className="w-full py-3 rounded-xl font-semibold text-xs uppercase tracking-wider text-white transition"
+                disabled={!supabase}
+                className="w-full py-3 rounded-xl font-semibold text-xs uppercase tracking-wider text-white transition disabled:cursor-not-allowed disabled:opacity-60"
                 style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
               >
                 Buka Akses Admin

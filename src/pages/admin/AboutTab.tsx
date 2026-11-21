@@ -9,15 +9,12 @@ export default function AboutTab({ onSave }: { onSave: () => void }) {
     secondaryColor, 
     personal, 
     updatePersonal, 
-    addSkill, 
-    removeSkill, 
     addEducation, 
     deleteEducation, 
     addExperience, 
     deleteExperience 
   } = usePortfolio();
 
-  const [newSkill, setNewSkill] = useState('');
   const [eduInst, setEduInst] = useState('');
   const [eduMajor, setEduMajor] = useState('');
   const [eduSub, setEduSub] = useState('');
@@ -158,39 +155,6 @@ export default function AboutTab({ onSave }: { onSave: () => void }) {
                 <Trash2 size={15} />
               </button>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Skills */}
-      <div className="pt-4 border-t border-white/10">
-        <label className="text-xs font-semibold block mb-2">Daftar Keahlian (Skills):</label>
-        <div className="flex gap-2 mb-4">
-          <input 
-            type="text" 
-            value={newSkill} 
-            onChange={(e) => setNewSkill(e.target.value)}
-            placeholder="Tambah skill baru"
-            className="flex-1 px-4 py-2 rounded-xl glass-panel bg-white/5 border border-white/10 text-xs"
-          />
-          <button 
-            type="button"
-            onClick={() => {
-              addSkill(newSkill);
-              setNewSkill('');
-            }}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5"
-            style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
-          >
-            <Plus size={16} /> Tambah
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {personal.skills.map((skill: string) => (
-            <span key={skill} className="px-3 py-1 rounded-lg glass-panel text-xs font-mono flex items-center gap-2">
-              {skill}
-              <button onClick={() => removeSkill(skill)} className="text-rose-400">✕</button>
-            </span>
           ))}
         </div>
       </div>

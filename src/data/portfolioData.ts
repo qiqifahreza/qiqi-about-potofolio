@@ -6,7 +6,6 @@ export interface GeneralSettings {
   heroSignature: string;
   heroImageUrl: string;
   currentStatusTitle: string;
-  currentStatusText: string;
   quoteTitle: string;
   quoteText: string;
 }
@@ -19,7 +18,6 @@ export interface PersonalInfo {
   yearsExperience: string;
   projectsCompleted: string;
   codeQualityStat: string;
-  skills: string[];
 }
 
 export interface ProjectItem {
